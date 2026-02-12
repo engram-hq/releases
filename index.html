@@ -475,7 +475,304 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Live Demo */
+        .demo {
+            padding: 6rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .demo h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .demo .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .demo-source {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .demo-source code {
+            background: var(--code-bg);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            color: var(--accent);
+            font-size: 0.8rem;
+        }
+
+        .demo-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1.5rem;
+            min-height: 500px;
+        }
+
+        .demo-sidebar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.25rem;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        .demo-sidebar h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .demo-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        .demo-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-content .meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .demo-content .meta-tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            background: var(--code-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .demo-content .rendered-md {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .demo-content .rendered-md h1 { font-size: 1.5rem; color: var(--text); margin: 1.5rem 0 0.75rem; }
+        .demo-content .rendered-md h2 { font-size: 1.25rem; color: var(--text); margin: 1.25rem 0 0.5rem; }
+        .demo-content .rendered-md h3 { font-size: 1.1rem; color: var(--text); margin: 1rem 0 0.5rem; }
+        .demo-content .rendered-md p { margin-bottom: 0.75rem; }
+        .demo-content .rendered-md code {
+            background: var(--code-bg);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--accent);
+        }
+        .demo-content .rendered-md pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 0.75rem 0;
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+        .demo-content .rendered-md pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-muted);
+        }
+        .demo-content .rendered-md ul, .demo-content .rendered-md ol {
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .demo-content .rendered-md li { margin-bottom: 0.25rem; }
+        .demo-content .rendered-md strong { color: var(--text); }
+        .demo-content .rendered-md hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 1.5rem 0;
+        }
+        .demo-content .rendered-md table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.75rem 0;
+            font-size: 0.85rem;
+        }
+        .demo-content .rendered-md th, .demo-content .rendered-md td {
+            border: 1px solid var(--border);
+            padding: 0.4rem 0.75rem;
+            text-align: left;
+        }
+        .demo-content .rendered-md th {
+            background: var(--code-bg);
+            color: var(--text);
+        }
+        .demo-content .rendered-md blockquote {
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+            margin: 0.75rem 0;
+            color: var(--text-muted);
+        }
+
+        .tree-org {
+            margin-bottom: 0.75rem;
+        }
+
+        .tree-org-label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: background 0.15s;
+        }
+
+        .tree-org-label:hover { background: var(--bg-card-hover); }
+
+        .tree-org-label .arrow {
+            font-size: 0.7rem;
+            transition: transform 0.2s;
+            color: var(--text-muted);
+        }
+
+        .tree-org-label .arrow.open { transform: rotate(90deg); }
+
+        .tree-org-label .org-icon { font-size: 1rem; }
+
+        .tree-files {
+            margin-left: 1.25rem;
+            display: none;
+        }
+
+        .tree-files.open { display: block; }
+
+        .tree-file {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: all 0.15s;
+        }
+
+        .tree-file:hover { background: var(--bg-card-hover); color: var(--text); }
+        .tree-file.active { background: rgba(139, 92, 246, 0.15); color: var(--primary-light); }
+
+        .tree-file .file-icon { font-size: 0.9rem; }
+
+        .tier-badge-sm {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.1rem 0.4rem;
+            border-radius: 999px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .tier-badge-sm.t2 { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+        .tier-badge-sm.t3 { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+
+        .demo-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: var(--text-muted);
+            gap: 1rem;
+        }
+
+        .demo-loading .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .demo-empty {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        .demo-error {
+            text-align: center;
+            padding: 2rem;
+            color: #fb7185;
+            font-size: 0.9rem;
+        }
+
+        .demo-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 400px;
+            color: var(--text-muted);
+            text-align: center;
+            gap: 1rem;
+        }
+
+        .demo-placeholder .icon { font-size: 3rem; opacity: 0.3; }
+        .demo-placeholder p { font-size: 0.95rem; max-width: 300px; }
+
+        .gh-link {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.5rem;
+            transition: color 0.15s;
+        }
+        .gh-link:hover { color: var(--primary-light); }
+
+        .word-count {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
         /* Responsive */
+        @media (max-width: 768px) {
+            .demo-container { grid-template-columns: 1fr; }
+            .demo-sidebar { max-height: 300px; }
+        }
+
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
             .hero p { font-size: 1.05rem; }
@@ -490,6 +787,7 @@
         <div class="container">
             <a href="#" class="logo">Engram</a>
             <ul class="nav-links">
+                <li><a href="#demo">Live Demo</a></li>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#architecture">Architecture</a></li>
                 <li><a href="#sdk">SDK</a></li>
@@ -505,8 +803,8 @@
             <h1>See what your <span class="gradient">AI agents</span> have learned</h1>
             <p>Visual browser for AI agent skills and memories. Track costs, explore knowledge hierarchies, and understand how your agents work across GitHub repos.</p>
             <div class="hero-buttons">
-                <a href="https://github.com/engram-hq/engram-web" class="btn-primary">View on GitHub</a>
-                <a href="#features" class="btn-secondary">Learn More</a>
+                <a href="#demo" class="btn-primary">Try Live Demo</a>
+                <a href="https://github.com/engram-hq/engram-web" class="btn-secondary">View on GitHub</a>
             </div>
         </div>
     </section>
@@ -515,7 +813,7 @@
         <div class="container">
             <div class="stats-grid">
                 <div>
-                    <div class="stat-value">14</div>
+                    <div class="stat-value">15</div>
                     <div class="stat-label">REST API Endpoints</div>
                 </div>
                 <div>
@@ -523,12 +821,36 @@
                     <div class="stat-label">Dashboard Pages</div>
                 </div>
                 <div>
-                    <div class="stat-value">133</div>
+                    <div class="stat-value">142</div>
                     <div class="stat-label">Tests Passing</div>
                 </div>
                 <div>
                     <div class="stat-value">3</div>
                     <div class="stat-label">Tier Skill System</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo" id="demo">
+        <div class="container">
+            <h2>Live Demo</h2>
+            <p class="subtitle">Real skills and memories fetched live from public GitHub repos. No mock data.</p>
+            <p class="demo-source">Browsing public repos from <code id="demo-org-label">engram-hq</code> and <code>sreniatnoc</code></p>
+            <div class="demo-container">
+                <div class="demo-sidebar" id="demo-tree">
+                    <h3>Skill Tree</h3>
+                    <div class="demo-loading" id="tree-loading">
+                        <div class="spinner"></div>
+                        <span>Scanning GitHub repos...</span>
+                    </div>
+                    <div id="tree-content"></div>
+                </div>
+                <div class="demo-content" id="demo-viewer">
+                    <div class="demo-placeholder">
+                        <div class="icon">&#128065;</div>
+                        <p>Select a skill from the tree to view its content, fetched live from GitHub.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -646,5 +968,338 @@ engram.<span class="func">track</span>({
             <p>&copy; 2026 Engram. Built by <a href="https://ishaileshpant.github.io">Shailesh Pant</a>.</p>
         </div>
     </footer>
+    <script>
+    // ==========================================
+    // LIVE DEMO - Configurable GitHub Skill Browser
+    // ==========================================
+    // Change these to point at any GitHub user/orgs
+    // Or pass ?orgs=org1,org2 in URL
+    const DEMO_CONFIG = {
+        // Orgs to scan for .skills repos and repo-level .skills/ dirs
+        orgs: ['engram-hq', 'sreniatnoc'],
+        // Cache key prefix
+        cachePrefix: 'engram-demo-v1',
+        // Cache TTL in ms (15 minutes)
+        cacheTTL: 15 * 60 * 1000,
+    };
+
+    // Allow URL override: ?orgs=org1,org2
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('orgs')) {
+        DEMO_CONFIG.orgs = urlParams.get('orgs').split(',').map(s => s.trim());
+        document.getElementById('demo-org-label').textContent = DEMO_CONFIG.orgs[0];
+    }
+
+    // GitHub API helper with caching
+    async function ghFetch(path) {
+        const cacheKey = DEMO_CONFIG.cachePrefix + ':' + path;
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+            const parsed = JSON.parse(cached);
+            if (Date.now() - parsed.ts < DEMO_CONFIG.cacheTTL) return parsed.data;
+        }
+        const res = await fetch('https://api.github.com' + path, {
+            headers: { 'Accept': 'application/vnd.github.v3+json' },
+        });
+        if (!res.ok) return null;
+        const data = await res.json();
+        try {
+            sessionStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
+        } catch (e) { /* sessionStorage full, ignore */ }
+        return data;
+    }
+
+    // Fetch raw file content
+    async function ghRawFetch(owner, repo, path) {
+        const cacheKey = DEMO_CONFIG.cachePrefix + ':raw:' + owner + '/' + repo + '/' + path;
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+            const parsed = JSON.parse(cached);
+            if (Date.now() - parsed.ts < DEMO_CONFIG.cacheTTL) return parsed.data;
+        }
+        const url = 'https://raw.githubusercontent.com/' + owner + '/' + repo + '/main/' + path;
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        const text = await res.text();
+        try {
+            sessionStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: text }));
+        } catch (e) {}
+        return text;
+    }
+
+    // Simple markdown to HTML renderer (no external deps)
+    function renderMarkdown(md) {
+        // Remove YAML frontmatter
+        md = md.replace(/^---[\s\S]*?---\n*/m, '');
+        let html = md;
+        // Code blocks (```...```)
+        html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) =>
+            '<pre><code>' + escapeHtml(code.trim()) + '</code></pre>');
+        // Inline code
+        html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+        // Headers
+        html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
+        html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+        html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+        html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+        // Bold
+        html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        // Italic
+        html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        // Horizontal rule
+        html = html.replace(/^---$/gm, '<hr>');
+        // Tables
+        html = html.replace(/^(\|.+\|)\n(\|[-:| ]+\|)\n((?:\|.+\|\n?)*)/gm, (_, header, sep, body) => {
+            const ths = header.split('|').filter(c => c.trim()).map(c => '<th>' + c.trim() + '</th>').join('');
+            const rows = body.trim().split('\n').map(row => {
+                const tds = row.split('|').filter(c => c.trim()).map(c => '<td>' + c.trim() + '</td>').join('');
+                return '<tr>' + tds + '</tr>';
+            }).join('');
+            return '<table><thead><tr>' + ths + '</tr></thead><tbody>' + rows + '</tbody></table>';
+        });
+        // Unordered lists
+        html = html.replace(/^((?:- .+\n?)+)/gm, (match) => {
+            const items = match.trim().split('\n').map(l =>
+                '<li>' + l.replace(/^- /, '') + '</li>').join('');
+            return '<ul>' + items + '</ul>';
+        });
+        // Ordered lists
+        html = html.replace(/^((?:\d+\. .+\n?)+)/gm, (match) => {
+            const items = match.trim().split('\n').map(l =>
+                '<li>' + l.replace(/^\d+\. /, '') + '</li>').join('');
+            return '<ol>' + items + '</ol>';
+        });
+        // Blockquotes
+        html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+        // Paragraphs (lines not already wrapped)
+        html = html.split('\n\n').map(block => {
+            block = block.trim();
+            if (!block) return '';
+            if (/^<[a-z]/.test(block)) return block;
+            return '<p>' + block.replace(/\n/g, '<br>') + '</p>';
+        }).join('\n');
+        return html;
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Parse frontmatter
+    function parseFrontmatter(md) {
+        const match = md.match(/^---\n([\s\S]*?)\n---/);
+        if (!match) return {};
+        const fm = {};
+        match[1].split('\n').forEach(line => {
+            const m = line.match(/^(\w+):\s*(.+)/);
+            if (m) fm[m[1]] = m[2].trim();
+        });
+        return fm;
+    }
+
+    // Count words
+    function wordCount(text) {
+        return text.replace(/```[\s\S]*?```/g, '').replace(/[#*`|>-]/g, '').trim().split(/\s+/).length;
+    }
+
+    // ==========================================
+    // Scan orgs and build tree data
+    // ==========================================
+    async function scanOrgs() {
+        const tree = []; // { org, tier, repo, files: [{ name, path }] }
+
+        for (const org of DEMO_CONFIG.orgs) {
+            // 1. Check for .skills repo (Tier 2 - org level)
+            const skillsRepo = await ghFetch('/repos/' + org + '/.skills');
+            if (skillsRepo && !skillsRepo.message) {
+                const contents = await ghFetch('/repos/' + org + '/.skills/contents');
+                if (contents && Array.isArray(contents)) {
+                    const files = await collectMdFiles(org, '.skills', contents, '');
+                    if (files.length > 0) {
+                        tree.push({ org, tier: 2, repo: '.skills', repoType: 'skills', files });
+                    }
+                }
+            }
+
+            // 2. Check for .memory repo (Tier 2 - org level)
+            const memoryRepo = await ghFetch('/repos/' + org + '/.memory');
+            if (memoryRepo && !memoryRepo.message) {
+                const contents = await ghFetch('/repos/' + org + '/.memory/contents');
+                if (contents && Array.isArray(contents)) {
+                    const files = await collectMdFiles(org, '.memory', contents, '');
+                    if (files.length > 0) {
+                        tree.push({ org, tier: 2, repo: '.memory', repoType: 'memory', files });
+                    }
+                }
+            }
+
+            // 3. Scan public repos for .skills/ dirs (Tier 3 - repo level)
+            const repos = await ghFetch('/orgs/' + org + '/repos?type=public&per_page=30');
+            if (repos && Array.isArray(repos)) {
+                for (const repo of repos) {
+                    if (repo.name === '.skills' || repo.name === '.memory') continue;
+                    const skillsDir = await ghFetch('/repos/' + org + '/' + repo.name + '/contents/.skills');
+                    if (skillsDir && Array.isArray(skillsDir)) {
+                        const files = skillsDir
+                            .filter(f => f.name.endsWith('.md'))
+                            .map(f => ({ name: f.name, path: '.skills/' + f.name }));
+                        if (files.length > 0) {
+                            tree.push({ org, tier: 3, repo: repo.name, repoType: 'project', files });
+                        }
+                    }
+                }
+            }
+        }
+
+        return tree;
+    }
+
+    async function collectMdFiles(org, repo, contents, prefix) {
+        const files = [];
+        for (const item of contents) {
+            if (item.type === 'file' && item.name.endsWith('.md')) {
+                files.push({ name: item.name, path: prefix ? prefix + '/' + item.name : item.name });
+            } else if (item.type === 'dir') {
+                const subContents = await ghFetch('/repos/' + org + '/' + repo + '/contents/' + item.path);
+                if (subContents && Array.isArray(subContents)) {
+                    const subFiles = await collectMdFiles(org, repo, subContents, item.path);
+                    files.push(...subFiles);
+                }
+            }
+        }
+        return files;
+    }
+
+    // ==========================================
+    // Render tree UI
+    // ==========================================
+    function renderTree(tree) {
+        const container = document.getElementById('tree-content');
+        container.innerHTML = '';
+
+        if (tree.length === 0) {
+            container.innerHTML = '<div class="demo-empty">No public skills or memories found.</div>';
+            return;
+        }
+
+        // Group by org
+        const byOrg = {};
+        for (const entry of tree) {
+            if (!byOrg[entry.org]) byOrg[entry.org] = [];
+            byOrg[entry.org].push(entry);
+        }
+
+        for (const [org, entries] of Object.entries(byOrg)) {
+            const orgDiv = document.createElement('div');
+            orgDiv.className = 'tree-org';
+
+            const orgLabel = document.createElement('div');
+            orgLabel.className = 'tree-org-label';
+            orgLabel.innerHTML = '<span class="arrow open">&#9654;</span><span class="org-icon">&#127970;</span> ' + org;
+
+            const filesContainer = document.createElement('div');
+            filesContainer.className = 'tree-files open';
+
+            for (const entry of entries) {
+                // Repo sub-header
+                const repoHeader = document.createElement('div');
+                repoHeader.className = 'tree-file';
+                repoHeader.style.fontWeight = '600';
+                repoHeader.style.color = 'var(--text)';
+                repoHeader.style.cursor = 'default';
+                repoHeader.style.marginTop = '0.25rem';
+                const tierClass = entry.tier === 2 ? 't2' : 't3';
+                const tierLabel = entry.tier === 2 ? 'T2' : 'T3';
+                repoHeader.innerHTML =
+                    '<span class="file-icon">&#128193;</span> ' + entry.repo +
+                    ' <span class="tier-badge-sm ' + tierClass + '">' + tierLabel + '</span>';
+                filesContainer.appendChild(repoHeader);
+
+                for (const file of entry.files) {
+                    const fileDiv = document.createElement('div');
+                    fileDiv.className = 'tree-file';
+                    const icon = entry.repoType === 'memory' ? '&#128218;' : '&#9889;';
+                    fileDiv.innerHTML = '<span class="file-icon">' + icon + '</span> ' + file.name;
+                    fileDiv.addEventListener('click', () => {
+                        document.querySelectorAll('.tree-file.active').forEach(el => el.classList.remove('active'));
+                        fileDiv.classList.add('active');
+                        loadFile(entry.org, entry.repo, file.path, entry.tier, entry.repoType);
+                    });
+                    filesContainer.appendChild(fileDiv);
+                }
+            }
+
+            orgLabel.addEventListener('click', () => {
+                filesContainer.classList.toggle('open');
+                orgLabel.querySelector('.arrow').classList.toggle('open');
+            });
+
+            orgDiv.appendChild(orgLabel);
+            orgDiv.appendChild(filesContainer);
+            container.appendChild(orgDiv);
+        }
+    }
+
+    // ==========================================
+    // Load and render a file
+    // ==========================================
+    async function loadFile(org, repo, path, tier, repoType) {
+        const viewer = document.getElementById('demo-viewer');
+        viewer.innerHTML = '<div class="demo-loading"><div class="spinner"></div><span>Fetching from GitHub...</span></div>';
+
+        const content = await ghRawFetch(org, repo, path);
+        if (!content) {
+            viewer.innerHTML = '<div class="demo-error">Failed to fetch file. GitHub API rate limit may be exceeded.</div>';
+            return;
+        }
+
+        const fm = parseFrontmatter(content);
+        const words = wordCount(content);
+        const tierLabel = tier === 2 ? 'Tier 2 - Org' : 'Tier 3 - Repo';
+        const tierClass = tier === 2 ? 't2' : 't3';
+        const typeIcon = repoType === 'memory' ? '&#128218;' : '&#9889;';
+        const ghUrl = 'https://github.com/' + org + '/' + repo + '/blob/main/' + path;
+
+        let metaTags = '';
+        metaTags += '<span class="meta-tag">' + typeIcon + ' ' + (repoType === 'memory' ? 'Memory' : 'Skill') + '</span>';
+        metaTags += '<span class="meta-tag tier-badge-sm ' + tierClass + '">' + tierLabel + '</span>';
+        metaTags += '<span class="meta-tag">&#127970; ' + org + '</span>';
+        if (fm.last_updated) metaTags += '<span class="meta-tag">&#128197; ' + fm.last_updated + '</span>';
+
+        const title = fm.name || path.split('/').pop().replace('.md', '');
+
+        viewer.innerHTML =
+            '<h3>' + title + '</h3>' +
+            '<div class="meta">' + metaTags + '</div>' +
+            '<div class="word-count">' + words.toLocaleString() + ' words &middot; ' + org + '/' + repo + '/' + path + '</div>' +
+            '<div class="rendered-md">' + renderMarkdown(content) + '</div>' +
+            '<a class="gh-link" href="' + ghUrl + '" target="_blank">&#128279; View on GitHub</a>';
+    }
+
+    // ==========================================
+    // Bootstrap
+    // ==========================================
+    (async function() {
+        try {
+            const tree = await scanOrgs();
+            document.getElementById('tree-loading').style.display = 'none';
+            renderTree(tree);
+
+            // Auto-select first file
+            if (tree.length > 0 && tree[0].files.length > 0) {
+                const first = tree[0];
+                loadFile(first.org, first.repo, first.files[0].path, first.tier, first.repoType);
+                // Mark first file as active
+                setTimeout(() => {
+                    const firstFile = document.querySelector('.tree-file:not([style*="font-weight"])');
+                    if (firstFile) firstFile.classList.add('active');
+                }, 100);
+            }
+        } catch (err) {
+            document.getElementById('tree-loading').innerHTML =
+                '<div class="demo-error">Failed to load demo: ' + err.message + '</div>';
+        }
+    })();
+    </script>
 </body>
 </html>
