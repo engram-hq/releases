@@ -1311,7 +1311,7 @@
                     <div class="feature-icon" style="background: rgba(34, 197, 94, 0.15); color: #4ade80;">&#128176;</div>
                     <span class="feature-status status-live">Live Demo</span>
                     <h3>AI Cost Analytics</h3>
-                    <p>Track what your agents cost. Cost trend charts, model breakdown (Opus vs Sonnet vs Haiku), per-session costs, and daily token usage. Try the Analytics tab above.</p>
+                    <p>Track agent activity and costs. Session counts, model usage, and org distribution from real data. Per-session cost tracking via SDK or memory frontmatter. Try the Analytics tab above.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">&#128270;</div>
@@ -1923,99 +1923,117 @@ engram.<span class="func">track</span>({
     }
 
     // ==========================================
-    // AI Cost Analytics
+    // AI Cost Analytics (real data only)
     // ==========================================
     function initAnalytics() {
-        // Generate realistic cost data from actual session data
+        // Extract ONLY real data from session memory frontmatter
         const sessions = DEMO_DATA.memories.map(m => {
             const fm = parseFrontmatter(m.content);
             const words = wordCount(m.content);
             const body = m.content.replace(/^---[\s\S]*?---\n*/m, '');
             const titleMatch = body.match(/^# (.+)$/m);
-            const title = titleMatch ? titleMatch[1] : m.name;
-            // Estimate tokens from word count (rough: 1 word ~ 1.3 tokens, sessions involve much more I/O)
-            const inputTokens = Math.round(words * 45 + Math.random() * 50000);
-            const outputTokens = Math.round(words * 18 + Math.random() * 20000);
-            const cacheTokens = Math.round(inputTokens * 2.1);
-            // Cost: Opus $15/1M input, $75/1M output, $1.50/1M cache
-            const cost = (inputTokens * 15 + outputTokens * 75 + cacheTokens * 1.5) / 1000000;
             return {
-                date: fm.date || m.name.match(/^(\d{4}-\d{2}-\d{2})/)?.[1] || '2026-02-12',
-                title: title.replace('Session: ', ''),
+                date: fm.date || m.name.match(/^(\d{4}-\d{2}-\d{2})/)?.[1] || '',
+                title: (titleMatch ? titleMatch[1] : m.name).replace('Session: ', ''),
                 org: fm.org || m.org,
-                inputTokens, outputTokens, cacheTokens,
-                cost: Math.round(cost * 100) / 100,
-                model: Math.random() > 0.3 ? 'Opus 4.6' : (Math.random() > 0.5 ? 'Sonnet 4.5' : 'Haiku 4.5'),
+                repo: fm.repo || '',
+                model: fm.model || '',
+                words,
+                // Only use cost/tokens if explicitly in frontmatter
+                cost: fm.cost_usd ? parseFloat(fm.cost_usd) : null,
+                inputTokens: fm.input_tokens ? parseInt(fm.input_tokens) : null,
+                outputTokens: fm.output_tokens ? parseInt(fm.output_tokens) : null,
             };
         });
 
         // Aggregate by date
         const byDate = {};
         for (const s of sessions) {
-            if (!byDate[s.date]) byDate[s.date] = { cost: 0, sessions: 0, inputTokens: 0, outputTokens: 0 };
-            byDate[s.date].cost += s.cost;
-            byDate[s.date].sessions += 1;
-            byDate[s.date].inputTokens += s.inputTokens;
-            byDate[s.date].outputTokens += s.outputTokens;
+            if (!s.date) continue;
+            if (!byDate[s.date]) byDate[s.date] = { sessions: 0, words: 0 };
+            byDate[s.date].sessions++;
+            byDate[s.date].words += s.words;
         }
         const dates = Object.keys(byDate).sort();
-        const maxCost = Math.max(...dates.map(d => byDate[d].cost));
+        const maxSessions = Math.max(...dates.map(d => byDate[d].sessions));
 
         // Aggregate by model
         const byModel = {};
         for (const s of sessions) {
-            if (!byModel[s.model]) byModel[s.model] = { cost: 0, count: 0 };
-            byModel[s.model].cost += s.cost;
-            byModel[s.model].count += 1;
+            const model = s.model || 'unknown';
+            if (!byModel[model]) byModel[model] = 0;
+            byModel[model]++;
         }
-        const totalCost = sessions.reduce((a, b) => a + b.cost, 0);
-        const totalInput = sessions.reduce((a, b) => a + b.inputTokens, 0);
-        const totalOutput = sessions.reduce((a, b) => a + b.outputTokens, 0);
-        const totalCache = sessions.reduce((a, b) => a + b.cacheTokens, 0);
-        const modelColors = { 'Opus 4.6': '#a78bfa', 'Sonnet 4.5': '#60a5fa', 'Haiku 4.5': '#4ade80' };
+
+        // Aggregate by org
+        const byOrg = {};
+        for (const s of sessions) {
+            if (!byOrg[s.org]) byOrg[s.org] = 0;
+            byOrg[s.org]++;
+        }
+
+        const hasCostData = sessions.some(s => s.cost !== null);
+        const totalWords = sessions.reduce((a, b) => a + b.words, 0);
+        const modelColors = { 'claude-opus-4-6': '#a78bfa', 'claude-sonnet-4-5': '#60a5fa', 'claude-haiku-4-5': '#4ade80' };
+        const modelLabels = { 'claude-opus-4-6': 'Claude Opus 4.6', 'claude-sonnet-4-5': 'Claude Sonnet 4.5', 'claude-haiku-4-5': 'Claude Haiku 4.5' };
 
         const container = document.getElementById('analytics-content');
         document.getElementById('analytics-loading').style.display = 'none';
 
-        // Summary cards
+        // Summary cards (only real metrics)
         let html = '<div class="analytics-summary">';
-        html += '<div class="analytics-card"><div class="value">$' + totalCost.toFixed(2) + '</div><div class="label">Total Cost</div></div>';
         html += '<div class="analytics-card"><div class="value">' + sessions.length + '</div><div class="label">Agent Sessions</div></div>';
-        html += '<div class="analytics-card"><div class="value">$' + (totalCost / sessions.length).toFixed(2) + '</div><div class="label">Avg Cost / Session</div></div>';
-        html += '<div class="analytics-card"><div class="value">' + ((totalInput + totalOutput + totalCache) / 1000000).toFixed(1) + 'M</div><div class="label">Total Tokens</div></div>';
+        html += '<div class="analytics-card"><div class="value">' + dates.length + '</div><div class="label">Active Days</div></div>';
+        html += '<div class="analytics-card"><div class="value">' + Object.keys(byOrg).length + '</div><div class="label">Organizations</div></div>';
+        html += '<div class="analytics-card"><div class="value">' + (totalWords / 1000).toFixed(1) + 'K</div><div class="label">Words Logged</div></div>';
         html += '</div>';
 
-        // Daily cost chart
-        html += '<div class="chart-section"><div class="chart-title">Daily Agent Costs</div><div class="bar-chart">';
+        // Sessions per day chart
+        html += '<div class="chart-section"><div class="chart-title">Sessions per Day</div><div class="bar-chart">';
         for (const date of dates) {
             const d = byDate[date];
-            const pct = maxCost > 0 ? (d.cost / maxCost * 100) : 0;
+            const pct = maxSessions > 0 ? (d.sessions / maxSessions * 100) : 0;
             html += '<div class="bar-group">' +
-                '<div class="bar" style="height: ' + Math.max(pct, 3) + '%"><div class="bar-value">$' + d.cost.toFixed(2) + '</div></div>' +
-                '<div class="bar-label">' + date.slice(5) + '<br>' + d.sessions + ' sess.</div></div>';
+                '<div class="bar" style="height: ' + Math.max(pct, 8) + '%"><div class="bar-value">' + d.sessions + '</div></div>' +
+                '<div class="bar-label">' + date.slice(5) + '<br>' + (d.words / 1000).toFixed(1) + 'K words</div></div>';
         }
         html += '</div></div>';
 
-        // Model breakdown
-        html += '<div class="chart-section"><div class="chart-title">Cost by Model</div><div class="model-bars">';
-        for (const [model, data] of Object.entries(byModel).sort((a, b) => b[1].cost - a[1].cost)) {
-            const pct = totalCost > 0 ? (data.cost / totalCost * 100) : 0;
+        // Model distribution (from frontmatter - real data)
+        html += '<div class="chart-section"><div class="chart-title">Model Usage</div><div class="model-bars">';
+        for (const [model, count] of Object.entries(byModel).sort((a, b) => b[1] - a[1])) {
+            const pct = (count / sessions.length * 100);
             const color = modelColors[model] || '#a78bfa';
+            const label = modelLabels[model] || model;
             html += '<div class="model-row">' +
-                '<div class="model-name">' + model + '</div>' +
+                '<div class="model-name">' + label + '</div>' +
                 '<div class="model-track"><div class="model-fill" style="width:' + pct + '%;background:' + color + ';">' + Math.round(pct) + '%</div></div>' +
-                '<div class="model-cost">$' + data.cost.toFixed(2) + '</div></div>';
+                '<div class="model-cost">' + count + ' sess.</div></div>';
         }
         html += '</div></div>';
 
-        // Per-session table
-        html += '<div class="chart-section"><div class="chart-title">Per-Session Breakdown</div>';
-        html += '<table class="session-table"><thead><tr><th>Session</th><th>Date</th><th>Model</th><th>Tokens</th><th>Cost</th></tr></thead><tbody>';
+        // Per-session table (only real fields)
+        html += '<div class="chart-section"><div class="chart-title">Session Log</div>';
+        html += '<table class="session-table"><thead><tr><th>Session</th><th>Date</th><th>Org</th><th>Model</th><th>Words</th>';
+        if (hasCostData) html += '<th>Cost</th>';
+        html += '</tr></thead><tbody>';
         for (const s of sessions.sort((a, b) => b.date.localeCompare(a.date))) {
-            const tokens = ((s.inputTokens + s.outputTokens) / 1000).toFixed(0) + 'K';
-            html += '<tr><td>' + s.title.slice(0, 30) + '</td><td>' + s.date.slice(5) + '</td><td>' + s.model + '</td><td>' + tokens + '</td><td>$' + s.cost.toFixed(2) + '</td></tr>';
+            const modelShort = (modelLabels[s.model] || s.model || '-').replace('Claude ', '');
+            html += '<tr><td>' + s.title.slice(0, 35) + '</td><td>' + s.date.slice(5) + '</td><td>' + s.org + '</td><td>' + modelShort + '</td><td>' + s.words.toLocaleString() + '</td>';
+            if (hasCostData) html += '<td>' + (s.cost !== null ? '$' + s.cost.toFixed(2) : '-') + '</td>';
+            html += '</tr>';
         }
         html += '</tbody></table></div>';
+
+        // Cost tracking CTA
+        if (!hasCostData) {
+            html += '<div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; text-align: center;">';
+            html += '<div style="font-size: 1.5rem; margin-bottom: 0.5rem;">&#128176;</div>';
+            html += '<div style="font-weight: 600; margin-bottom: 0.5rem;">Cost Tracking</div>';
+            html += '<p style="color: var(--text-muted); font-size: 0.9rem; max-width: 500px; margin: 0 auto 1rem;">Per-session cost and token data will appear here when sessions include <code style="background: var(--code-bg); padding: 0.1rem 0.4rem; border-radius: 4px; color: var(--accent); font-size: 0.85rem;">cost_usd</code>, <code style="background: var(--code-bg); padding: 0.1rem 0.4rem; border-radius: 4px; color: var(--accent); font-size: 0.85rem;">input_tokens</code>, and <code style="background: var(--code-bg); padding: 0.1rem 0.4rem; border-radius: 4px; color: var(--accent); font-size: 0.85rem;">output_tokens</code> in memory frontmatter, or when tracked via the <a href="https://github.com/engram-hq/engram-sdk" style="color: var(--primary-light);">Engram SDK</a>.</p>';
+            html += '<p style="color: var(--text-muted); font-size: 0.8rem;">All data above is real - sourced from session memory files in public GitHub repos.</p>';
+            html += '</div>';
+        }
 
         container.innerHTML = html;
     }
