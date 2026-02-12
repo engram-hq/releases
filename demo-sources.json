@@ -4,8 +4,13 @@
     { "org": "sreniatnoc", "repo": ".skills", "tier": 2, "path": "org-knowledge/SKILL.md" },
     { "org": "sreniatnoc", "repo": "rusd", "tier": 3, "path": ".skills/kind-validation.md" }
   ],
-  "memory_orgs": [
-    { "org": "engram-hq" },
-    { "org": "sreniatnoc" }
+  "memories": [
+    { "org": "engram-hq", "path": "sessions/2026-02-11-platform-scaffold.md" },
+    { "org": "engram-hq", "path": "sessions/2026-02-12-live-demo-skills.md" },
+    { "org": "engram-hq", "path": "sessions/2026-02-12-production-readiness.md" },
+    { "org": "sreniatnoc", "path": "sessions/2026-02-09-rusd-kind-validation.md" },
+    { "org": "sreniatnoc", "path": "sessions/2026-02-10-production-hardening.md" },
+    { "org": "sreniatnoc", "path": "sessions/2026-02-11-k8s-test-suite.md" },
+    { "org": "sreniatnoc", "path": "sessions/2026-02-11-multi-node-raft.md" }
   ]
 }
