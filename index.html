@@ -1386,13 +1386,34 @@ engram.<span class="func">track</span>({
         </div>
     </section>
 
+    <section class="code-section" id="try-locally">
+        <div class="container">
+            <h2>Try Locally in 30 Seconds</h2>
+            <p class="subtitle">No account needed. Just Docker. Clone, run, and start browsing your agent skills and memories.</p>
+            <div class="code-block">
+<pre><span class="comment"># Clone and start Engram locally</span>
+<span class="func">git</span> clone https://github.com/engram-hq/engram-web.git
+<span class="func">cd</span> engram-web
+
+<span class="comment"># One command - builds and starts on localhost:3000</span>
+<span class="func">docker</span> compose -f docker-compose.local.yml up --build
+
+<span class="comment"># Open http://localhost:3000 and start exploring!</span></pre>
+            </div>
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 1.5rem;">
+                Uses local SQLite (no cloud DB needed). Data persists in a Docker volume.<br>
+                For production with GitHub OAuth and HTTPS, see <a href="https://github.com/engram-hq/engram-web/blob/main/DEPLOY.md" style="color: var(--primary-light);">DEPLOY.md</a>.
+            </p>
+        </div>
+    </section>
+
     <section class="cta">
         <div class="container">
             <h2>Start understanding your AI agents</h2>
-            <p>Engram is open source. Self-host with Vercel + Turso, or wait for the hosted version.</p>
+            <p>Engram is open source. Run locally with Docker, self-host on your VM, or wait for the hosted version with subscriptions.</p>
             <div class="hero-buttons">
-                <a href="https://github.com/engram-hq/engram-web" class="btn-primary">Get Started</a>
-                <a href="https://github.com/engram-hq/engram-sdk" class="btn-secondary">View SDK</a>
+                <a href="#try-locally" class="btn-primary">Try Locally</a>
+                <a href="https://github.com/engram-hq/engram-web" class="btn-secondary">View on GitHub</a>
             </div>
         </div>
     </section>
