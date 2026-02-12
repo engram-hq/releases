@@ -1,0 +1,130 @@
+name: Refresh Demo Data
+
+on:
+  schedule:
+    # Run at 2am UTC daily
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch skills and memories from GitHub
+        env:
+          GH_TOKEN: ${{ secrets.DEMO_GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # Orgs and repos to scan
+          SKILL_SOURCES=(
+            "engram-hq/.skills:org-knowledge/SKILL.md"
+            "sreniatnoc/.skills:org-knowledge/SKILL.md"
+            "sreniatnoc/rusd:.skills/kind-validation.md"
+          )
+
+          MEMORY_ORGS=("engram-hq" "sreniatnoc")
+
+          # Start JSON
+          echo '{"skills":[],"memories":[],"generated_at":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"}' > demo-data.tmp.json
+
+          # Fetch skills
+          for source in "${SKILL_SOURCES[@]}"; do
+            IFS=':' read -r repo path <<< "$source"
+            org="${repo%%/*}"
+            repo_name="${repo#*/}"
+
+            # Determine tier
+            tier=2
+            if [ "$repo_name" != ".skills" ]; then
+              tier=3
+            fi
+
+            content=$(curl -sH "Authorization: token $GH_TOKEN" \
+              "https://raw.githubusercontent.com/$repo/main/$path" 2>/dev/null || echo "")
+
+            if [ -n "$content" ] && [ "$content" != "404: Not Found" ]; then
+              name=$(basename "$path")
+              python3 -c "
+          import json, sys
+          with open('demo-data.tmp.json') as f:
+              data = json.load(f)
+          data['skills'].append({
+              'org': '$org', 'repo': '$repo_name', 'tier': $tier,
+              'path': '$path', 'name': '$name',
+              'content': sys.stdin.read()
+          })
+          with open('demo-data.tmp.json', 'w') as f:
+              json.dump(data, f, indent=2)
+          " <<< "$content"
+              echo "  Fetched skill: $repo/$path"
+            fi
+          done
+
+          # Fetch memories
+          for org in "${MEMORY_ORGS[@]}"; do
+            # List session files via API
+            files=$(curl -sH "Authorization: token $GH_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/$org/.memory/contents/sessions" 2>/dev/null || echo "[]")
+
+            echo "$files" | python3 -c "
+          import json, sys, subprocess
+
+          files = json.load(sys.stdin)
+          if not isinstance(files, list):
+              sys.exit(0)
+
+          for f in files:
+              name = f.get('name', '')
+              if not name.endswith('.md') or name == 'README.md':
+                  continue
+              path = 'sessions/' + name
+              url = f'https://raw.githubusercontent.com/$org/.memory/main/{path}'
+              result = subprocess.run(
+                  ['curl', '-sH', 'Authorization: token $GH_TOKEN', url],
+                  capture_output=True, text=True
+              )
+              content = result.stdout
+              if not content or '404' in content[:20]:
+                  continue
+
+              with open('demo-data.tmp.json') as fh:
+                  data = json.load(fh)
+              data['memories'].append({
+                  'org': '$org', 'repo': '.memory',
+                  'path': path, 'name': name,
+                  'content': content
+              })
+              with open('demo-data.tmp.json', 'w') as fh:
+                  json.dump(data, fh, indent=2)
+              print(f'  Fetched memory: $org/.memory/{path}')
+          "
+          done
+
+          # Validate and replace
+          python3 -c "
+          import json
+          with open('demo-data.tmp.json') as f:
+              data = json.load(f)
+          print(f'Skills: {len(data[\"skills\"])}, Memories: {len(data[\"memories\"])}')
+          assert len(data['skills']) > 0, 'No skills found'
+          assert len(data['memories']) > 0, 'No memories found'
+          " && mv demo-data.tmp.json demo-data.json
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add demo-data.json
+          if git diff --cached --quiet; then
+            echo "No changes to demo data"
+          else
+            git commit -m "chore: refresh demo data [automated]"
+            git push
+          fi
