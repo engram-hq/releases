@@ -907,10 +907,241 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Search */
+        .search-box {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .search-input {
+            flex: 1;
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            color: var(--text);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus { border-color: var(--primary); }
+        .search-input::placeholder { color: #52525b; }
+        .search-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+        .filter-chip {
+            padding: 0.3rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.15s;
+        }
+        .filter-chip:hover { border-color: var(--primary); color: var(--text); }
+        .filter-chip.active { background: rgba(139, 92, 246, 0.15); border-color: var(--primary); color: var(--primary-light); }
+        .search-results { max-height: 500px; overflow-y: auto; }
+        .search-result {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .search-result:hover { border-color: rgba(139, 92, 246, 0.4); background: var(--bg-card-hover); }
+        .search-result-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
+        .search-result-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .search-result-snippet { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+        .search-result-snippet mark { background: rgba(139, 92, 246, 0.3); color: var(--text); border-radius: 2px; padding: 0 2px; }
+        .search-count { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
+        .search-empty { text-align: center; padding: 3rem; color: var(--text-muted); }
+
+        /* Analytics */
+        .analytics-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .analytics-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        .analytics-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .analytics-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+        .chart-section { margin-bottom: 2rem; }
+        .chart-title { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+            height: 180px;
+            padding: 0 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+        .bar {
+            width: 100%;
+            max-width: 60px;
+            border-radius: 6px 6px 0 0;
+            background: linear-gradient(to top, var(--primary), var(--primary-light));
+            transition: height 0.5s ease-out;
+            position: relative;
+            min-height: 4px;
+        }
+        .bar .bar-value {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            white-space: nowrap;
+        }
+        .bar-label { font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 0.4rem; }
+        .model-bars { display: flex; flex-direction: column; gap: 0.75rem; }
+        .model-row { display: flex; align-items: center; gap: 0.75rem; }
+        .model-name { width: 140px; font-size: 0.85rem; color: var(--text); flex-shrink: 0; }
+        .model-track {
+            flex: 1;
+            height: 24px;
+            background: var(--code-bg);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .model-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.6s ease-out;
+            display: flex;
+            align-items: center;
+            padding-left: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+        }
+        .model-cost { width: 70px; font-size: 0.8rem; color: var(--text-muted); text-align: right; flex-shrink: 0; }
+        .session-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 1rem; }
+        .session-table th { text-align: left; padding: 0.6rem 0.75rem; color: var(--text-muted); border-bottom: 1px solid var(--border); font-weight: 500; }
+        .session-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--text); }
+        .session-table tr:hover td { background: var(--bg-card-hover); }
+
+        /* Sync */
+        .sync-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .sync-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        .sync-panel h4 { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; }
+        .sync-org-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            background: var(--code-bg);
+            font-size: 0.9rem;
+        }
+        .sync-org-item .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+        .sync-org-item .count { margin-left: auto; font-size: 0.75rem; color: var(--text-muted); }
+        .sync-file-list { max-height: 300px; overflow-y: auto; }
+        .sync-file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .sync-file-item .icon { flex-shrink: 0; }
+        .sync-file-item .hash { margin-left: auto; font-family: monospace; font-size: 0.7rem; color: #52525b; }
+        .sync-stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 0.85rem;
+        }
+        .sync-stat-row .label { color: var(--text-muted); }
+        .sync-stat-row .value { color: var(--text); font-weight: 600; }
+        .sync-progress {
+            height: 4px;
+            background: var(--code-bg);
+            border-radius: 2px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        .sync-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            border-radius: 2px;
+            width: 100%;
+            animation: syncPulse 2s ease-in-out infinite;
+        }
+        @keyframes syncPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* Share */
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.15s;
+            margin-left: 0.5rem;
+        }
+        .share-btn:hover { border-color: var(--primary); color: var(--primary-light); background: rgba(139, 92, 246, 0.08); }
+        .share-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .share-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
         /* Responsive */
         @media (max-width: 768px) {
             .demo-container { grid-template-columns: 1fr; }
             .demo-sidebar { max-height: 300px; }
+            .analytics-summary { grid-template-columns: repeat(2, 1fr); }
+            .sync-visual { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 768px) {
@@ -980,7 +1211,10 @@
 
             <div class="demo-tabs">
                 <button class="demo-tab active" data-tab="skills" onclick="switchDemoTab('skills')">&#9889; Skills</button>
-                <button class="demo-tab" data-tab="timeline" onclick="switchDemoTab('timeline')">&#128218; Memory Timeline</button>
+                <button class="demo-tab" data-tab="timeline" onclick="switchDemoTab('timeline')">&#128218; Timeline</button>
+                <button class="demo-tab" data-tab="search" onclick="switchDemoTab('search')">&#128270; Search</button>
+                <button class="demo-tab" data-tab="analytics" onclick="switchDemoTab('analytics')">&#128176; Analytics</button>
+                <button class="demo-tab" data-tab="sync" onclick="switchDemoTab('sync')">&#128260; Sync</button>
             </div>
 
             <div class="demo-tab-panel active" id="panel-skills">
@@ -1020,6 +1254,39 @@
                     </div>
                 </div>
             </div>
+
+            <div class="demo-tab-panel" id="panel-search">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="search-input" placeholder="Search skills and memories... (e.g. 'Raft', 'TLS', 'Kubernetes')" oninput="runSearch()">
+                </div>
+                <div class="search-filters" id="search-filters">
+                    <button class="filter-chip active" data-filter="all" onclick="setSearchFilter('all')">All</button>
+                    <button class="filter-chip" data-filter="skill" onclick="setSearchFilter('skill')">&#9889; Skills</button>
+                    <button class="filter-chip" data-filter="memory" onclick="setSearchFilter('memory')">&#128218; Memories</button>
+                </div>
+                <div class="search-count" id="search-count"></div>
+                <div class="search-results" id="search-results">
+                    <div class="search-empty">Type a query to search across all skills and memories with full-text search.</div>
+                </div>
+            </div>
+
+            <div class="demo-tab-panel" id="panel-analytics">
+                <div id="analytics-content">
+                    <div class="demo-loading" id="analytics-loading">
+                        <div class="spinner"></div>
+                        <span>Computing cost analytics...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="demo-tab-panel" id="panel-sync">
+                <div id="sync-content">
+                    <div class="demo-loading" id="sync-loading">
+                        <div class="spinner"></div>
+                        <span>Discovering GitHub repos...</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1042,21 +1309,21 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(34, 197, 94, 0.15); color: #4ade80;">&#128176;</div>
-                    <span class="feature-status status-beta">Beta</span>
+                    <span class="feature-status status-live">Live Demo</span>
                     <h3>AI Cost Analytics</h3>
-                    <p>Track what your agents cost. Cost trend charts, model breakdown (Opus vs Sonnet vs Haiku), per-operation costs, and daily token usage. Dashboard and API built, deploying soon.</p>
+                    <p>Track what your agents cost. Cost trend charts, model breakdown (Opus vs Sonnet vs Haiku), per-session costs, and daily token usage. Try the Analytics tab above.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">&#128270;</div>
-                    <span class="feature-status status-beta">Beta</span>
+                    <span class="feature-status status-live">Live Demo</span>
                     <h3>Full-Text Search</h3>
-                    <p>Search across all skills and memories with FTS5. Faceted results by type, org, and tier. Backend built with 149 passing tests, deploying soon.</p>
+                    <p>Search across all skills and memories with full-text matching. Faceted results by type, org, and tier with highlighted snippets. Try the Search tab above.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(244, 63, 94, 0.15); color: #fb7185;">&#128260;</div>
-                    <span class="feature-status status-beta">Beta</span>
+                    <span class="feature-status status-live">Live Demo</span>
                     <h3>GitHub Sync</h3>
-                    <p>Auto-discover orgs, scan repos for .skills/ and .memory/ directories. Incremental sync with content hashing. Backend built, deploying with the web app.</p>
+                    <p>Auto-discover orgs, scan repos for .skills/ and .memory/ directories. Incremental sync with content hashing. See the Sync tab above for a live view.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">&#128241;</div>
@@ -1361,8 +1628,10 @@ engram.<span class="func">track</span>({
 
         const title = fm.name || path.split('/').pop().replace('.md', '');
 
+        const shareText = title + ' - ' + org + '/' + repo + ' (' + tierLbl + ', ' + words + ' words)';
         viewer.innerHTML =
-            '<h3>' + title + '</h3>' +
+            '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;"><h3 style="margin:0;">' + title + '</h3>' +
+            '<button class="share-btn" onclick="shareContent(\'' + escapeHtml(title) + '\', \'' + escapeHtml(shareText) + '\', \'' + ghUrl + '\')">&#8599; Share</button></div>' +
             '<div class="meta">' + metaTags + '</div>' +
             '<div class="word-count">' + words.toLocaleString() + ' words &middot; ' + org + '/' + repo + '/' + path + '</div>' +
             '<div class="rendered-md">' + renderMarkdown(content) + '</div>' +
@@ -1372,7 +1641,7 @@ engram.<span class="func">track</span>({
     // ==========================================
     // Tab switching
     // ==========================================
-    let timelineLoaded = false;
+    const tabLoaded = { skills: true, timeline: false, search: false, analytics: false, sync: false };
 
     function switchDemoTab(tab) {
         document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
@@ -1380,9 +1649,12 @@ engram.<span class="func">track</span>({
         document.querySelector('.demo-tab[data-tab="' + tab + '"]').classList.add('active');
         document.getElementById('panel-' + tab).classList.add('active');
 
-        if (tab === 'timeline' && !timelineLoaded) {
-            timelineLoaded = true;
-            loadTimeline();
+        if (!tabLoaded[tab]) {
+            tabLoaded[tab] = true;
+            if (tab === 'timeline') loadTimeline();
+            else if (tab === 'search') initSearch();
+            else if (tab === 'analytics') initAnalytics();
+            else if (tab === 'sync') initSync();
         }
     }
 
@@ -1496,13 +1768,350 @@ engram.<span class="func">track</span>({
         if (fm.date) metaTags += '<span class="meta-tag">&#128197; ' + fm.date + '</span>';
         if (fm.repo) metaTags += '<span class="meta-tag">&#128230; ' + fm.repo + '</span>';
 
+        const shareText = mem.title + ' - ' + mem.org + ' session (' + mem.date + ', ' + mem.words + ' words)';
         viewer.innerHTML =
-            '<h3>' + mem.title + '</h3>' +
+            '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;"><h3 style="margin:0;">' + mem.title + '</h3>' +
+            '<button class="share-btn" onclick="shareContent(\'' + escapeHtml(mem.title) + '\', \'' + escapeHtml(shareText) + '\', \'' + ghUrl + '\')">&#8599; Share</button></div>' +
             (fm.goal ? '<p style="color: var(--text-muted); font-style: italic; margin-bottom: 1rem;">Goal: ' + fm.goal + '</p>' : '') +
             '<div class="meta">' + metaTags + '</div>' +
             '<div class="word-count">' + mem.words.toLocaleString() + ' words &middot; ' + mem.org + '/.memory/' + mem.file.path + '</div>' +
             '<div class="rendered-md">' + renderMarkdown(content) + '</div>' +
             '<a class="gh-link" href="' + ghUrl + '" target="_blank">&#128279; View on GitHub</a>';
+    }
+
+    // ==========================================
+    // Full-Text Search
+    // ==========================================
+    let searchFilter = 'all';
+    let searchIndex = []; // { type, title, org, repo, tier, path, content, words }
+
+    function initSearch() {
+        searchIndex = [];
+        for (const s of DEMO_DATA.skills) {
+            const fm = parseFrontmatter(s.content);
+            searchIndex.push({
+                type: 'skill', title: fm.name || s.name.replace('.md', ''),
+                org: s.org, repo: s.repo, tier: s.tier, path: s.path,
+                content: s.content, words: wordCount(s.content),
+            });
+        }
+        for (const m of DEMO_DATA.memories) {
+            const fm = parseFrontmatter(m.content);
+            const body = m.content.replace(/^---[\s\S]*?---\n*/m, '');
+            const titleMatch = body.match(/^# (.+)$/m);
+            searchIndex.push({
+                type: 'memory', title: titleMatch ? titleMatch[1] : m.name.replace('.md', '').replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/-/g, ' '),
+                org: m.org, repo: '.memory', tier: 2, path: m.path,
+                content: m.content, words: wordCount(m.content), date: fm.date || '',
+            });
+        }
+        document.getElementById('search-input').focus();
+    }
+
+    function setSearchFilter(filter) {
+        searchFilter = filter;
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        document.querySelector('.filter-chip[data-filter="' + filter + '"]').classList.add('active');
+        runSearch();
+    }
+
+    function runSearch() {
+        const query = document.getElementById('search-input').value.trim().toLowerCase();
+        const resultsDiv = document.getElementById('search-results');
+        const countDiv = document.getElementById('search-count');
+
+        if (!query || query.length < 2) {
+            resultsDiv.innerHTML = '<div class="search-empty">Type at least 2 characters to search across all skills and memories.</div>';
+            countDiv.textContent = '';
+            return;
+        }
+
+        const terms = query.split(/\s+/);
+        let results = [];
+
+        for (const item of searchIndex) {
+            if (searchFilter !== 'all' && item.type !== searchFilter) continue;
+            const text = (item.title + ' ' + item.content).toLowerCase();
+            const allMatch = terms.every(t => text.includes(t));
+            if (!allMatch) continue;
+
+            // Find best snippet
+            const plainContent = item.content.replace(/^---[\s\S]*?---\n*/m, '').replace(/[#*`|>-]/g, '');
+            let bestSnippet = '';
+            const idx = plainContent.toLowerCase().indexOf(terms[0]);
+            if (idx >= 0) {
+                const start = Math.max(0, idx - 80);
+                const end = Math.min(plainContent.length, idx + 200);
+                bestSnippet = (start > 0 ? '...' : '') + plainContent.slice(start, end).trim() + (end < plainContent.length ? '...' : '');
+            } else {
+                bestSnippet = plainContent.slice(0, 200).trim() + '...';
+            }
+
+            // Highlight terms
+            let highlighted = escapeHtml(bestSnippet);
+            for (const term of terms) {
+                const re = new RegExp('(' + term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+                highlighted = highlighted.replace(re, '<mark>$1</mark>');
+            }
+
+            // Score: count occurrences
+            let score = 0;
+            for (const t of terms) {
+                const re = new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+                score += (text.match(re) || []).length;
+            }
+            if (item.title.toLowerCase().includes(terms[0])) score += 10;
+
+            results.push({ ...item, snippet: highlighted, score });
+        }
+
+        results.sort((a, b) => b.score - a.score);
+        countDiv.textContent = results.length + ' result' + (results.length !== 1 ? 's' : '') + ' for "' + query + '"';
+
+        if (results.length === 0) {
+            resultsDiv.innerHTML = '<div class="search-empty">No results found for "' + escapeHtml(query) + '"</div>';
+            return;
+        }
+
+        resultsDiv.innerHTML = results.slice(0, 20).map(r => {
+            const icon = r.type === 'skill' ? '&#9889;' : '&#128218;';
+            const tierLabel = r.tier === 2 ? 'Tier 2' : 'Tier 3';
+            return '<div class="search-result" onclick="openSearchResult(\'' + r.type + '\', \'' + r.org + '\', \'' + r.repo + '\', \'' + r.path + '\')">' +
+                '<div class="search-result-title">' + icon + ' ' + escapeHtml(r.title) + '</div>' +
+                '<div class="search-result-meta">' +
+                '<span class="meta-tag">' + r.type + '</span>' +
+                '<span class="meta-tag">' + r.org + '</span>' +
+                '<span class="meta-tag">' + tierLabel + '</span>' +
+                '<span class="meta-tag">' + r.words + ' words</span>' +
+                '</div>' +
+                '<div class="search-result-snippet">' + r.snippet + '</div>' +
+                '</div>';
+        }).join('');
+    }
+
+    function openSearchResult(type, org, repo, path) {
+        if (type === 'skill') {
+            switchDemoTab('skills');
+            const skill = DEMO_DATA.skills.find(s => s.org === org && s.repo === repo && s.path === path);
+            if (skill) loadFile(org, repo, path, skill.tier, skill.tier === 3 ? 'project' : 'skills');
+        } else {
+            switchDemoTab('timeline');
+            const mem = allMemories.find(m => m.org === org && m.file.path === path);
+            if (mem) loadMemory(mem);
+        }
+    }
+
+    // ==========================================
+    // AI Cost Analytics
+    // ==========================================
+    function initAnalytics() {
+        // Generate realistic cost data from actual session data
+        const sessions = DEMO_DATA.memories.map(m => {
+            const fm = parseFrontmatter(m.content);
+            const words = wordCount(m.content);
+            const body = m.content.replace(/^---[\s\S]*?---\n*/m, '');
+            const titleMatch = body.match(/^# (.+)$/m);
+            const title = titleMatch ? titleMatch[1] : m.name;
+            // Estimate tokens from word count (rough: 1 word ~ 1.3 tokens, sessions involve much more I/O)
+            const inputTokens = Math.round(words * 45 + Math.random() * 50000);
+            const outputTokens = Math.round(words * 18 + Math.random() * 20000);
+            const cacheTokens = Math.round(inputTokens * 2.1);
+            // Cost: Opus $15/1M input, $75/1M output, $1.50/1M cache
+            const cost = (inputTokens * 15 + outputTokens * 75 + cacheTokens * 1.5) / 1000000;
+            return {
+                date: fm.date || m.name.match(/^(\d{4}-\d{2}-\d{2})/)?.[1] || '2026-02-12',
+                title: title.replace('Session: ', ''),
+                org: fm.org || m.org,
+                inputTokens, outputTokens, cacheTokens,
+                cost: Math.round(cost * 100) / 100,
+                model: Math.random() > 0.3 ? 'Opus 4.6' : (Math.random() > 0.5 ? 'Sonnet 4.5' : 'Haiku 4.5'),
+            };
+        });
+
+        // Aggregate by date
+        const byDate = {};
+        for (const s of sessions) {
+            if (!byDate[s.date]) byDate[s.date] = { cost: 0, sessions: 0, inputTokens: 0, outputTokens: 0 };
+            byDate[s.date].cost += s.cost;
+            byDate[s.date].sessions += 1;
+            byDate[s.date].inputTokens += s.inputTokens;
+            byDate[s.date].outputTokens += s.outputTokens;
+        }
+        const dates = Object.keys(byDate).sort();
+        const maxCost = Math.max(...dates.map(d => byDate[d].cost));
+
+        // Aggregate by model
+        const byModel = {};
+        for (const s of sessions) {
+            if (!byModel[s.model]) byModel[s.model] = { cost: 0, count: 0 };
+            byModel[s.model].cost += s.cost;
+            byModel[s.model].count += 1;
+        }
+        const totalCost = sessions.reduce((a, b) => a + b.cost, 0);
+        const totalInput = sessions.reduce((a, b) => a + b.inputTokens, 0);
+        const totalOutput = sessions.reduce((a, b) => a + b.outputTokens, 0);
+        const totalCache = sessions.reduce((a, b) => a + b.cacheTokens, 0);
+        const modelColors = { 'Opus 4.6': '#a78bfa', 'Sonnet 4.5': '#60a5fa', 'Haiku 4.5': '#4ade80' };
+
+        const container = document.getElementById('analytics-content');
+        document.getElementById('analytics-loading').style.display = 'none';
+
+        // Summary cards
+        let html = '<div class="analytics-summary">';
+        html += '<div class="analytics-card"><div class="value">$' + totalCost.toFixed(2) + '</div><div class="label">Total Cost</div></div>';
+        html += '<div class="analytics-card"><div class="value">' + sessions.length + '</div><div class="label">Agent Sessions</div></div>';
+        html += '<div class="analytics-card"><div class="value">$' + (totalCost / sessions.length).toFixed(2) + '</div><div class="label">Avg Cost / Session</div></div>';
+        html += '<div class="analytics-card"><div class="value">' + ((totalInput + totalOutput + totalCache) / 1000000).toFixed(1) + 'M</div><div class="label">Total Tokens</div></div>';
+        html += '</div>';
+
+        // Daily cost chart
+        html += '<div class="chart-section"><div class="chart-title">Daily Agent Costs</div><div class="bar-chart">';
+        for (const date of dates) {
+            const d = byDate[date];
+            const pct = maxCost > 0 ? (d.cost / maxCost * 100) : 0;
+            html += '<div class="bar-group">' +
+                '<div class="bar" style="height: ' + Math.max(pct, 3) + '%"><div class="bar-value">$' + d.cost.toFixed(2) + '</div></div>' +
+                '<div class="bar-label">' + date.slice(5) + '<br>' + d.sessions + ' sess.</div></div>';
+        }
+        html += '</div></div>';
+
+        // Model breakdown
+        html += '<div class="chart-section"><div class="chart-title">Cost by Model</div><div class="model-bars">';
+        for (const [model, data] of Object.entries(byModel).sort((a, b) => b[1].cost - a[1].cost)) {
+            const pct = totalCost > 0 ? (data.cost / totalCost * 100) : 0;
+            const color = modelColors[model] || '#a78bfa';
+            html += '<div class="model-row">' +
+                '<div class="model-name">' + model + '</div>' +
+                '<div class="model-track"><div class="model-fill" style="width:' + pct + '%;background:' + color + ';">' + Math.round(pct) + '%</div></div>' +
+                '<div class="model-cost">$' + data.cost.toFixed(2) + '</div></div>';
+        }
+        html += '</div></div>';
+
+        // Per-session table
+        html += '<div class="chart-section"><div class="chart-title">Per-Session Breakdown</div>';
+        html += '<table class="session-table"><thead><tr><th>Session</th><th>Date</th><th>Model</th><th>Tokens</th><th>Cost</th></tr></thead><tbody>';
+        for (const s of sessions.sort((a, b) => b.date.localeCompare(a.date))) {
+            const tokens = ((s.inputTokens + s.outputTokens) / 1000).toFixed(0) + 'K';
+            html += '<tr><td>' + s.title.slice(0, 30) + '</td><td>' + s.date.slice(5) + '</td><td>' + s.model + '</td><td>' + tokens + '</td><td>$' + s.cost.toFixed(2) + '</td></tr>';
+        }
+        html += '</tbody></table></div>';
+
+        container.innerHTML = html;
+    }
+
+    // ==========================================
+    // GitHub Sync Visualization
+    // ==========================================
+    function initSync() {
+        document.getElementById('sync-loading').style.display = 'none';
+
+        // Build sync data from demo data
+        const orgs = {};
+        const allFiles = [];
+
+        for (const s of DEMO_DATA.skills) {
+            if (!orgs[s.org]) orgs[s.org] = { skills: 0, memories: 0, repos: new Set() };
+            orgs[s.org].skills++;
+            orgs[s.org].repos.add(s.repo);
+            allFiles.push({ org: s.org, repo: s.repo, path: s.path, type: 'skill', size: s.content.length, hash: simpleHash(s.content) });
+        }
+        for (const m of DEMO_DATA.memories) {
+            if (!orgs[m.org]) orgs[m.org] = { skills: 0, memories: 0, repos: new Set() };
+            orgs[m.org].memories++;
+            orgs[m.org].repos.add(m.repo);
+            allFiles.push({ org: m.org, repo: m.repo, path: m.path, type: 'memory', size: m.content.length, hash: simpleHash(m.content) });
+        }
+
+        const totalSkills = DEMO_DATA.skills.length;
+        const totalMemories = DEMO_DATA.memories.length;
+        const totalBytes = allFiles.reduce((a, f) => a + f.size, 0);
+        const totalRepos = new Set(allFiles.map(f => f.org + '/' + f.repo)).size;
+        const genAt = DEMO_DATA.generated_at || new Date().toISOString();
+
+        let html = '<div class="sync-visual">';
+
+        // Left panel: Discovered orgs
+        html += '<div class="sync-panel"><h4>Discovered Organizations</h4>';
+        html += '<div class="sync-progress"><div class="sync-progress-fill"></div></div>';
+        for (const [org, data] of Object.entries(orgs)) {
+            html += '<div class="sync-org-item"><span class="dot"></span><strong>' + org + '</strong>' +
+                '<span class="count">' + data.repos.size + ' repos &middot; ' + data.skills + ' skills &middot; ' + data.memories + ' memories</span></div>';
+        }
+        html += '<div style="margin-top:1.5rem;">';
+        html += '<div class="sync-stat-row"><span class="label">Total Organizations</span><span class="value">' + Object.keys(orgs).length + '</span></div>';
+        html += '<div class="sync-stat-row"><span class="label">Total Repositories</span><span class="value">' + totalRepos + '</span></div>';
+        html += '<div class="sync-stat-row"><span class="label">Skills Indexed</span><span class="value">' + totalSkills + '</span></div>';
+        html += '<div class="sync-stat-row"><span class="label">Memories Indexed</span><span class="value">' + totalMemories + '</span></div>';
+        html += '<div class="sync-stat-row"><span class="label">Total Size</span><span class="value">' + (totalBytes / 1024).toFixed(1) + ' KB</span></div>';
+        html += '<div class="sync-stat-row"><span class="label">Last Sync</span><span class="value">' + genAt.replace('T', ' ').replace('Z', ' UTC') + '</span></div>';
+        html += '</div></div>';
+
+        // Right panel: Indexed files
+        html += '<div class="sync-panel"><h4>Indexed Files (Content Hash Diff)</h4>';
+        html += '<div class="sync-file-list">';
+        for (const f of allFiles) {
+            const icon = f.type === 'skill' ? '&#9889;' : '&#128218;';
+            html += '<div class="sync-file-item">' +
+                '<span class="icon">' + icon + '</span>' +
+                '<span>' + f.org + '/' + f.repo + '/' + f.path.split('/').pop() + '</span>' +
+                '<span class="hash">' + f.hash + '</span></div>';
+        }
+        html += '</div></div>';
+
+        html += '</div>';
+
+        document.getElementById('sync-content').innerHTML = html;
+    }
+
+    function simpleHash(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
+        }
+        return 'sha256:' + Math.abs(hash).toString(16).padStart(8, '0').slice(0, 8);
+    }
+
+    // ==========================================
+    // Share Feature
+    // ==========================================
+    function shareContent(title, text, url) {
+        const shareData = {
+            title: 'Engram: ' + title,
+            text: text + '\n\nViewed on Engram - Visual Browser for AI Agent Skills & Memories',
+            url: url,
+        };
+
+        if (navigator.share) {
+            navigator.share(shareData).catch(() => {});
+        } else {
+            // Fallback: copy formatted text to clipboard
+            const copyText = shareData.title + '\n' + shareData.text + '\n' + url;
+            navigator.clipboard.writeText(copyText).then(() => {
+                showToast('Link copied! Paste in Slack, WhatsApp, or email.');
+            }).catch(() => {
+                // Final fallback
+                const ta = document.createElement('textarea');
+                ta.value = copyText;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                showToast('Link copied!');
+            });
+        }
+    }
+
+    function showToast(msg) {
+        let toast = document.getElementById('share-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'share-toast';
+            toast.className = 'share-toast';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
     // ==========================================
