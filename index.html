@@ -228,7 +228,23 @@
             border-radius: 16px;
             padding: 2rem;
             transition: all 0.2s;
+            position: relative;
         }
+
+        .feature-status {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-live { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .status-beta { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+        .status-roadmap { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
 
         .feature-card:hover {
             background: var(--bg-card-hover);
@@ -1014,33 +1030,39 @@
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa;">&#9889;</div>
+                    <span class="feature-status status-live">Live Demo</span>
                     <h3>Skill Browser</h3>
                     <p>Navigate your 3-tier skill hierarchy (User, Org, Repo) with tree view and list view. See frontmatter metadata, rendered markdown, and word counts.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(6, 182, 212, 0.15); color: #22d3ee;">&#129504;</div>
+                    <span class="feature-status status-live">Live Demo</span>
                     <h3>Memory Timeline</h3>
                     <p>Vertical timeline of all agent session memories, grouped by date. Filter by org, type, and date range. See goals, repos, and session details.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(34, 197, 94, 0.15); color: #4ade80;">&#128176;</div>
+                    <span class="feature-status status-beta">Beta</span>
                     <h3>AI Cost Analytics</h3>
-                    <p>Track what your agents cost. Cost trend charts, model breakdown (Opus vs Sonnet vs Haiku), per-operation costs, and daily token usage.</p>
+                    <p>Track what your agents cost. Cost trend charts, model breakdown (Opus vs Sonnet vs Haiku), per-operation costs, and daily token usage. Dashboard and API built, deploying soon.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">&#128270;</div>
+                    <span class="feature-status status-beta">Beta</span>
                     <h3>Full-Text Search</h3>
-                    <p>Search across all skills and memories with FTS5. Faceted results by type, org, and tier. Instantly find what your agents know.</p>
+                    <p>Search across all skills and memories with FTS5. Faceted results by type, org, and tier. Backend built with 149 passing tests, deploying soon.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(244, 63, 94, 0.15); color: #fb7185;">&#128260;</div>
+                    <span class="feature-status status-beta">Beta</span>
                     <h3>GitHub Sync</h3>
-                    <p>Auto-discover orgs, scan repos for .skills/ and .memory/ directories. Incremental sync with content hashing - only processes what changed.</p>
+                    <p>Auto-discover orgs, scan repos for .skills/ and .memory/ directories. Incremental sync with content hashing. Backend built, deploying with the web app.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">&#128241;</div>
-                    <h3>iOS App (Coming Soon)</h3>
-                    <p>Native SwiftUI app with Swift Charts for analytics. Browse skills and memories on the go. Offline caching with Core Data.</p>
+                    <span class="feature-status status-roadmap">Roadmap</span>
+                    <h3>iOS App</h3>
+                    <p>Native SwiftUI app with Swift Charts for analytics. 59 tests passing, App Store metadata prepared. Pending Apple Developer enrollment and backend deployment.</p>
                 </div>
             </div>
         </div>
