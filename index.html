@@ -1184,6 +1184,105 @@
         }
         .share-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
+        /* Explore Any Repo */
+        .explore-bar {
+            max-width: 700px;
+            margin: 0 auto 1rem;
+        }
+        .explore-input-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .explore-input {
+            flex: 1;
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.65rem 1rem;
+            color: var(--text);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .explore-input:focus { border-color: var(--primary); }
+        .explore-input::placeholder { color: #52525b; }
+        .explore-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.65rem 1.25rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .explore-btn:hover { background: var(--primary-dark); }
+        .explore-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .explore-btn .spinner-sm {
+            width: 14px; height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: none;
+        }
+        .explore-btn.loading .spinner-sm { display: inline-block; }
+        .explore-btn.loading .btn-text { display: none; }
+        .explore-chips {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .explore-chips-label {
+            font-size: 0.75rem;
+            color: #52525b;
+        }
+        .explore-chip {
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.15s;
+        }
+        .explore-chip:hover { border-color: var(--primary); color: var(--text); }
+        .explore-chip.active {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: var(--primary);
+            color: var(--primary-light);
+        }
+        .explore-chip .remove {
+            margin-left: 0.25rem;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+        .explore-chip .remove:hover { opacity: 1; }
+        .explore-rate {
+            font-size: 0.68rem;
+            color: #3f3f46;
+            text-align: center;
+            margin-top: 0.4rem;
+        }
+        .explore-status {
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            min-height: 1.2em;
+        }
+        .explore-status.error { color: #fb7185; }
+
         /* Responsive */
         @media (max-width: 768px) {
             .demo-container { grid-template-columns: 1fr; }
@@ -1255,7 +1354,26 @@
         <div class="container">
             <h2>Live Demo</h2>
             <p class="subtitle">Real skills and memories fetched live from public GitHub repos. No mock data.</p>
-            <p class="demo-source">Browsing public repos from <code id="demo-org-label">engram-hq</code> and <code>sreniatnoc</code></p>
+            <p class="demo-source">Browsing public repos from <code id="demo-org-label">engram-hq</code>, <code>sreniatnoc</code>, and <code>ARTIFACTIQ</code></p>
+
+            <div class="explore-bar">
+                <div class="explore-input-row">
+                    <input type="text" class="explore-input" id="explore-input" placeholder="Paste any public GitHub repo URL (e.g. github.com/facebook/react)" onkeydown="if(event.key==='Enter')analyzeRepo()">
+                    <button class="explore-btn" id="explore-btn" onclick="analyzeRepo()">
+                        <span class="spinner-sm"></span>
+                        <span class="btn-text">Analyze</span>
+                    </button>
+                </div>
+                <div class="explore-status" id="explore-status"></div>
+                <div class="explore-chips" id="explore-chips">
+                    <span class="explore-chips-label">Try:</span>
+                    <button class="explore-chip showcase-chip" onclick="loadShowcase('facebook/react')">facebook/react</button>
+                    <button class="explore-chip showcase-chip" onclick="loadShowcase('denoland/deno')">denoland/deno</button>
+                    <button class="explore-chip showcase-chip" onclick="loadShowcase('astral-sh/ruff')">astral-sh/ruff</button>
+                    <button class="explore-chip showcase-chip" onclick="loadShowcase('pallets/flask')">pallets/flask</button>
+                </div>
+                <div class="explore-rate" id="explore-rate"></div>
+            </div>
 
             <div class="demo-tabs">
                 <button class="demo-tab active" data-tab="skills" onclick="switchDemoTab('skills')">&#9889; Skills</button>
@@ -1498,6 +1616,11 @@ engram.<span class="func">track</span>({
         </div>
     </footer>
     <script src="demo-data.js"></script>
+    <script>window.SHOWCASE_DATA = null;</script>
+    <script>
+    // Load showcase data (pre-analyzed famous repos)
+    fetch('showcase-data.json').then(r => r.ok ? r.json() : null).then(d => { window.SHOWCASE_DATA = d; }).catch(() => {});
+    </script>
     <script src="https://unpkg.com/three@0.170.0/build/three.min.js"></script>
     <script src="https://unpkg.com/3d-force-graph"></script>
     <script>
@@ -1913,6 +2036,12 @@ engram.<span class="func">track</span>({
         }
 
         // Links: skill-to-session (knowledge dendrites - thinner, slower)
+        // Also link skills to each other within orgs that have no sessions
+        const skillsByOrg = {};
+        for (const s of skills) {
+            if (!skillsByOrg[s.org]) skillsByOrg[s.org] = [];
+            skillsByOrg[s.org].push(s);
+        }
         for (const s of skills) {
             const orgSessions = byOrg[s.org] || [];
             const c = ORG_COLORS[s.org] || DEFAULT_NODE_COLOR;
@@ -1923,14 +2052,26 @@ engram.<span class="func">track</span>({
                     particles: 3, particleWidth: 1.8, speed: 0.005,
                     width: 0.6, linkType: 'dendrite',
                 });
+                if (orgSessions.length > 1) {
+                    links.push({
+                        source: s.id, target: orgSessions[0].id,
+                        dimColor: c + '06', particleColor: c + '88',
+                        particles: 2, particleWidth: 1.2, speed: 0.004,
+                        width: 0.3, linkType: 'dendrite',
+                    });
+                }
             }
-            // Cross-link skills in same org to first session too
-            if (orgSessions.length > 1) {
+        }
+        // Chain skill nodes together for orgs with no sessions (prevents dangling)
+        for (const [org, orgSkills] of Object.entries(skillsByOrg)) {
+            if ((byOrg[org] || []).length > 0) continue; // has sessions, already linked
+            const c = ORG_COLORS[org] || DEFAULT_NODE_COLOR;
+            for (let i = 0; i < orgSkills.length - 1; i++) {
                 links.push({
-                    source: s.id, target: orgSessions[0].id,
-                    dimColor: c + '06', particleColor: c + '88',
-                    particles: 2, particleWidth: 1.2, speed: 0.004,
-                    width: 0.3, linkType: 'dendrite',
+                    source: orgSkills[i].id, target: orgSkills[i + 1].id,
+                    dimColor: c + '10', particleColor: c + 'aa',
+                    particles: 4, particleWidth: 2, speed: 0.006,
+                    width: 0.8, linkType: 'dendrite',
                 });
             }
         }
@@ -2113,9 +2254,10 @@ engram.<span class="func">track</span>({
 
         for (const [org, data] of Object.entries(_tlOrgTree)) {
             const color = ORG_COLORS[org] || DEFAULT_NODE_COLOR;
+            const countLabel = data.sessions.length > 0 ? data.sessions.length : (data.repos.size + ' repos');
             html += '<div class="tl-org-item' + (activeFilter === org ? ' active' : '') + '" onclick="filterGraph(\'' + org + '\')">' +
                 '<span><span class="tl-org-dot" style="background:' + color + ';"></span> ' + org + '</span>' +
-                '<span class="tl-count">' + data.sessions.length + '</span></div>';
+                '<span class="tl-count">' + countLabel + '</span></div>';
 
             html += '<div class="tl-session-list">';
             for (const s of data.sessions) {
@@ -2574,6 +2716,432 @@ engram.<span class="func">track</span>({
     }
 
     // ==========================================
+    // Explore Any Repo - GitHub API Client
+    // ==========================================
+    let ghRateRemaining = 60;
+    let ghRateReset = 0;
+    const EXPLORE_CACHE_KEY = 'engram_explore_cache';
+    const EXPLORE_CACHE_TTL = 24 * 60 * 60 * 1000; // 24h
+    const analyzedRepos = new Set();
+
+    // Dynamic org colors for explored repos
+    const EXPLORE_COLORS = ['#f472b6', '#34d399', '#fb923c', '#60a5fa', '#a3e635', '#c084fc', '#fbbf24', '#f87171', '#38bdf8', '#a78bfa'];
+    let exploreColorIdx = 0;
+
+    async function ghFetch(path) {
+        const url = 'https://api.github.com' + path;
+        const res = await fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+        ghRateRemaining = parseInt(res.headers.get('x-ratelimit-remaining') || '60');
+        ghRateReset = parseInt(res.headers.get('x-ratelimit-reset') || '0');
+        updateRateDisplay();
+        if (!res.ok) throw new Error('GitHub API ' + res.status + ': ' + (await res.text()).slice(0, 100));
+        return res.json();
+    }
+
+    function updateRateDisplay() {
+        const el = document.getElementById('explore-rate');
+        if (!el) return;
+        const resetIn = Math.max(0, ghRateReset - Math.floor(Date.now() / 1000));
+        el.textContent = ghRateRemaining + '/60 API calls remaining' + (ghRateRemaining < 10 ? ' (resets in ' + Math.ceil(resetIn / 60) + 'min)' : '');
+    }
+
+    function setExploreStatus(msg, isError) {
+        const el = document.getElementById('explore-status');
+        if (!el) return;
+        el.textContent = msg;
+        el.className = 'explore-status' + (isError ? ' error' : '');
+    }
+
+    function parseRepoInput(input) {
+        input = input.trim().replace(/\/$/, '');
+        // Handle full URLs: github.com/owner/repo, https://github.com/owner/repo
+        const urlMatch = input.match(/(?:https?:\/\/)?github\.com\/([^\/]+)\/([^\/\s#?]+)/);
+        if (urlMatch) return urlMatch[1] + '/' + urlMatch[2];
+        // Handle owner/repo format
+        const shortMatch = input.match(/^([a-zA-Z0-9_.-]+)\/([a-zA-Z0-9_.-]+)$/);
+        if (shortMatch) return shortMatch[1] + '/' + shortMatch[2];
+        return null;
+    }
+
+    function getExploreCache() {
+        try {
+            const raw = localStorage.getItem(EXPLORE_CACHE_KEY);
+            if (!raw) return {};
+            const cache = JSON.parse(raw);
+            const now = Date.now();
+            // Evict expired entries
+            for (const key of Object.keys(cache)) {
+                if (now - cache[key].cachedAt > EXPLORE_CACHE_TTL) delete cache[key];
+            }
+            return cache;
+        } catch { return {}; }
+    }
+
+    function setExploreCache(slug, data) {
+        try {
+            const cache = getExploreCache();
+            cache[slug] = { ...data, cachedAt: Date.now() };
+            localStorage.setItem(EXPLORE_CACHE_KEY, JSON.stringify(cache));
+        } catch {}
+    }
+
+    async function fetchRepoData(slug) {
+        // Check cache first
+        const cache = getExploreCache();
+        if (cache[slug]) {
+            setExploreStatus('Loaded from cache');
+            return cache[slug];
+        }
+
+        const [owner, repo] = slug.split('/');
+        setExploreStatus('Fetching repository metadata...');
+
+        // Batch 1: repo info, languages, readme
+        const [repoData, languages, readmeData] = await Promise.all([
+            ghFetch('/repos/' + owner + '/' + repo),
+            ghFetch('/repos/' + owner + '/' + repo + '/languages').catch(() => ({})),
+            ghFetch('/repos/' + owner + '/' + repo + '/readme').catch(() => null),
+        ]);
+
+        setExploreStatus('Fetching file tree and history...');
+
+        // Batch 2: tree, commits, releases, contributors
+        const [treeData, commits, releases, contributors] = await Promise.all([
+            ghFetch('/repos/' + owner + '/' + repo + '/git/trees/' + repoData.default_branch + '?recursive=1').catch(() => ({ tree: [] })),
+            ghFetch('/repos/' + owner + '/' + repo + '/commits?per_page=30').catch(() => []),
+            ghFetch('/repos/' + owner + '/' + repo + '/releases?per_page=10').catch(() => []),
+            ghFetch('/repos/' + owner + '/' + repo + '/contributors?per_page=10').catch(() => []),
+        ]);
+
+        // Decode README
+        let readmeExcerpt = '';
+        if (readmeData && readmeData.content) {
+            try { readmeExcerpt = atob(readmeData.content.replace(/\n/g, '')).slice(0, 800); } catch {}
+        }
+
+        const result = {
+            slug, repoData, languages, readmeExcerpt,
+            tree: (treeData.tree || []).slice(0, 500).map(t => t.path),
+            commits: commits.slice(0, 30),
+            releases: releases.slice(0, 10),
+            contributors: contributors.slice(0, 10),
+            generatedAt: new Date().toISOString(),
+        };
+
+        setExploreCache(slug, result);
+        return result;
+    }
+
+    function generateSkillsFromRepo(data) {
+        const { slug, repoData, languages, readmeExcerpt, tree, commits, releases, contributors } = data;
+        const [owner, repo] = slug.split('/');
+        const skills = [];
+        const memories = [];
+        const now = new Date().toISOString().split('T')[0];
+
+        // Detect frameworks and tools from tree
+        const topDirs = {};
+        const extensions = {};
+        let hasTests = false, testFramework = '', hasCi = false, hasDocker = false, hasContributing = false;
+        const ciFiles = [];
+        for (const p of tree) {
+            const parts = p.split('/');
+            if (parts.length > 1) topDirs[parts[0]] = (topDirs[parts[0]] || 0) + 1;
+            const ext = p.split('.').pop().toLowerCase();
+            if (ext !== p) extensions[ext] = (extensions[ext] || 0) + 1;
+            if (/^(test|tests|__tests__|spec|specs)\//i.test(p) || /_test\.(go|rs|py)$/.test(p) || /\.test\.(js|ts|tsx)$/.test(p) || /test_.*\.py$/.test(p)) hasTests = true;
+            if (/jest\.config/i.test(p)) testFramework = 'Jest';
+            else if (/pytest\.ini|conftest\.py|tox\.ini/i.test(p)) testFramework = 'pytest';
+            else if (/vitest/i.test(p)) testFramework = 'Vitest';
+            else if (/cargo\.toml/i.test(p) && !testFramework) testFramework = 'cargo test';
+            if (/^\.github\/workflows\//i.test(p)) { hasCi = true; ciFiles.push(p); }
+            if (/dockerfile/i.test(p) || /docker-compose/i.test(p)) hasDocker = true;
+            if (/contributing\.md/i.test(p)) hasContributing = true;
+        }
+
+        // Detect package managers / frameworks
+        const frameworks = [];
+        const treeSet = new Set(tree);
+        if (treeSet.has('package.json')) frameworks.push('Node.js');
+        if (treeSet.has('Cargo.toml')) frameworks.push('Rust/Cargo');
+        if (treeSet.has('go.mod')) frameworks.push('Go modules');
+        if (treeSet.has('pyproject.toml') || treeSet.has('setup.py')) frameworks.push('Python');
+        if (treeSet.has('Gemfile')) frameworks.push('Ruby/Bundler');
+        if (treeSet.has('pom.xml') || treeSet.has('build.gradle')) frameworks.push('Java/JVM');
+        if (treeSet.has('Package.swift')) frameworks.push('Swift SPM');
+        if (treeSet.has('next.config.js') || treeSet.has('next.config.mjs') || treeSet.has('next.config.ts')) frameworks.push('Next.js');
+        if (treeSet.has('vite.config.ts') || treeSet.has('vite.config.js')) frameworks.push('Vite');
+
+        // --- SKILL 1: Architecture ---
+        const topDirsSorted = Object.entries(topDirs).sort((a, b) => b[1] - a[1]).slice(0, 15);
+        const topExtsSorted = Object.entries(extensions).sort((a, b) => b[1] - a[1]).slice(0, 10);
+        let archContent = '---\nname: ' + repo + '-architecture\ndescription: Repository structure and architecture for ' + slug + '\nlast_updated: ' + now + '\n---\n\n';
+        archContent += '# Architecture: ' + slug + '\n\n';
+        archContent += '## Overview\n\n' + (repoData.description || 'No description') + '\n\n';
+        archContent += '## Top-Level Directories\n\n';
+        for (const [dir, count] of topDirsSorted) archContent += '- **' + dir + '/** - ' + count + ' files\n';
+        archContent += '\n## File Types\n\n';
+        for (const [ext, count] of topExtsSorted) archContent += '- `.' + ext + '` - ' + count + ' files\n';
+        archContent += '\n## Stats\n\n- Total files: ' + tree.length + '\n- Stars: ' + (repoData.stargazers_count || 0).toLocaleString() + '\n- Forks: ' + (repoData.forks_count || 0).toLocaleString() + '\n- Open issues: ' + (repoData.open_issues_count || 0).toLocaleString() + '\n';
+        if (repoData.topics && repoData.topics.length) archContent += '- Topics: ' + repoData.topics.join(', ') + '\n';
+        skills.push({ org: slug, repo: repo, tier: 2, path: 'architecture/SKILL.md', name: 'architecture.md', content: archContent });
+
+        // --- SKILL 2: Tech Stack ---
+        const langEntries = Object.entries(languages).sort((a, b) => b[1] - a[1]);
+        const totalBytes = langEntries.reduce((a, b) => a + b[1], 0);
+        let stackContent = '---\nname: ' + repo + '-tech-stack\ndescription: Languages, frameworks, and tooling for ' + slug + '\nlast_updated: ' + now + '\n---\n\n';
+        stackContent += '# Tech Stack: ' + slug + '\n\n';
+        stackContent += '## Languages\n\n';
+        for (const [lang, bytes] of langEntries) {
+            const pct = totalBytes > 0 ? (bytes / totalBytes * 100).toFixed(1) : '0';
+            stackContent += '- **' + lang + '** - ' + pct + '%\n';
+        }
+        if (frameworks.length) stackContent += '\n## Frameworks & Tools\n\n' + frameworks.map(f => '- ' + f).join('\n') + '\n';
+        if (hasDocker) stackContent += '\n## Containerization\n\n- Docker support detected\n';
+        skills.push({ org: slug, repo: repo, tier: 2, path: 'tech-stack/SKILL.md', name: 'tech-stack.md', content: stackContent });
+
+        // --- SKILL 3: Testing (if detected) ---
+        if (hasTests) {
+            let testContent = '---\nname: ' + repo + '-testing\ndescription: Test infrastructure for ' + slug + '\nlast_updated: ' + now + '\n---\n\n';
+            testContent += '# Testing: ' + slug + '\n\n';
+            if (testFramework) testContent += '- **Framework**: ' + testFramework + '\n';
+            const testDirs = [...new Set(tree.filter(p => /^(test|tests|__tests__|spec)\//i.test(p)).map(p => p.split('/')[0]))];
+            if (testDirs.length) testContent += '- **Test directories**: ' + testDirs.join(', ') + '\n';
+            const testFiles = tree.filter(p => /_test\.|\.test\.|test_|_spec\.|\.spec\./i.test(p));
+            testContent += '- **Test files detected**: ' + testFiles.length + '\n';
+            skills.push({ org: slug, repo: repo, tier: 2, path: 'testing/SKILL.md', name: 'testing.md', content: testContent });
+        }
+
+        // --- SKILL 4: CI/CD (if detected) ---
+        if (hasCi) {
+            let ciContent = '---\nname: ' + repo + '-ci-cd\ndescription: CI/CD configuration for ' + slug + '\nlast_updated: ' + now + '\n---\n\n';
+            ciContent += '# CI/CD: ' + slug + '\n\n';
+            ciContent += '## GitHub Actions Workflows\n\n';
+            for (const f of ciFiles) ciContent += '- `' + f + '`\n';
+            if (hasDocker) ciContent += '\n## Docker\n\n- Dockerfile detected for containerized builds\n';
+            skills.push({ org: slug, repo: repo, tier: 2, path: 'ci-cd/SKILL.md', name: 'ci-cd.md', content: ciContent });
+        }
+
+        // --- SKILL 5: Contributing (if detected) ---
+        if (hasContributing && contributors.length) {
+            let contribContent = '---\nname: ' + repo + '-contributing\ndescription: Contributor guide for ' + slug + '\nlast_updated: ' + now + '\n---\n\n';
+            contribContent += '# Contributing: ' + slug + '\n\n';
+            contribContent += '## Top Contributors\n\n';
+            for (const c of contributors) contribContent += '- **' + c.login + '** - ' + c.contributions + ' commits\n';
+            contribContent += '\n- CONTRIBUTING.md present in repository\n';
+            skills.push({ org: slug, repo: repo, tier: 2, path: 'contributing/SKILL.md', name: 'contributing.md', content: contribContent });
+        }
+
+        // --- MEMORY 1: Project Overview ---
+        let overviewContent = '---\ndate: ' + now + '\ntype: exploration\norg: ' + slug + '\nrepo: ' + repo + '\nmodel: engram-analyzer\n---\n\n';
+        overviewContent += '# Session: ' + repo + ' Project Overview\n\n';
+        overviewContent += '## Summary\n\n**Explored ' + slug + '** - ' + (repoData.description || 'A GitHub repository') + '\n\n';
+        overviewContent += '## Key Facts\n\n';
+        overviewContent += '- **Created**: ' + (repoData.created_at || '').split('T')[0] + '\n';
+        overviewContent += '- **Stars**: ' + (repoData.stargazers_count || 0).toLocaleString() + '\n';
+        overviewContent += '- **Primary language**: ' + (repoData.language || 'unknown') + '\n';
+        overviewContent += '- **Files**: ' + tree.length + '\n';
+        if (readmeExcerpt) {
+            overviewContent += '\n## README Excerpt\n\n' + readmeExcerpt.slice(0, 400) + '...\n';
+        }
+        memories.push({ org: slug, repo: '.memory', path: 'sessions/' + now + '-' + repo + '-overview.md', name: now + '-' + repo + '-overview.md', content: overviewContent });
+
+        // --- MEMORY 2: Recent Activity ---
+        if (commits.length) {
+            let actContent = '---\ndate: ' + now + '\ntype: exploration\norg: ' + slug + '\nrepo: ' + repo + '\nmodel: engram-analyzer\n---\n\n';
+            actContent += '# Session: ' + repo + ' Recent Activity\n\n';
+            actContent += '## Summary\n\n**Analyzed last ' + commits.length + ' commits** for ' + slug + '\n\n';
+            actContent += '## Recent Commits\n\n';
+            for (const c of commits.slice(0, 15)) {
+                const date = (c.commit && c.commit.author && c.commit.author.date) ? c.commit.author.date.split('T')[0] : '';
+                const msg = (c.commit && c.commit.message) ? c.commit.message.split('\n')[0].slice(0, 80) : '';
+                const author = (c.commit && c.commit.author) ? c.commit.author.name : '';
+                actContent += '- ' + date + ' - **' + escapeHtml(msg) + '** (' + escapeHtml(author) + ')\n';
+            }
+            memories.push({ org: slug, repo: '.memory', path: 'sessions/' + now + '-' + repo + '-activity.md', name: now + '-' + repo + '-activity.md', content: actContent });
+        }
+
+        // --- MEMORY 3: Release Timeline ---
+        if (releases.length) {
+            let relContent = '---\ndate: ' + now + '\ntype: exploration\norg: ' + slug + '\nrepo: ' + repo + '\nmodel: engram-analyzer\n---\n\n';
+            relContent += '# Session: ' + repo + ' Release Timeline\n\n';
+            relContent += '## Summary\n\n**Analyzed ' + releases.length + ' releases** for ' + slug + '\n\n';
+            relContent += '## Releases\n\n';
+            for (const r of releases) {
+                const date = r.published_at ? r.published_at.split('T')[0] : '';
+                relContent += '### ' + (r.tag_name || r.name || 'Release') + ' (' + date + ')\n\n';
+                if (r.body) relContent += r.body.slice(0, 200) + (r.body.length > 200 ? '...' : '') + '\n\n';
+            }
+            memories.push({ org: slug, repo: '.memory', path: 'sessions/' + now + '-' + repo + '-releases.md', name: now + '-' + repo + '-releases.md', content: relContent });
+        }
+
+        return { skills, memories };
+    }
+
+    function integrateRepoData(slug, generated) {
+        // Register org color
+        if (!ORG_COLORS[slug]) {
+            ORG_COLORS[slug] = EXPLORE_COLORS[exploreColorIdx % EXPLORE_COLORS.length];
+            exploreColorIdx++;
+        }
+
+        // Append to DEMO_DATA
+        DEMO_DATA.skills.push(...generated.skills);
+        DEMO_DATA.memories.push(...generated.memories);
+
+        // Re-render Skills tree
+        const tree = buildTree();
+        document.getElementById('tree-loading').style.display = 'none';
+        renderTree(tree);
+
+        // Invalidate other tabs for lazy re-render
+        allMemories = [];
+        tabLoaded.timeline = false;
+        tabLoaded.search = false;
+        tabLoaded.analytics = false;
+        tabLoaded.sync = false;
+
+        // Add active chip
+        addAnalyzedChip(slug);
+        analyzedRepos.add(slug);
+    }
+
+    function addAnalyzedChip(slug) {
+        const container = document.getElementById('explore-chips');
+        // Don't add duplicate
+        if (container.querySelector('[data-repo="' + slug + '"]')) return;
+        const chip = document.createElement('button');
+        chip.className = 'explore-chip active';
+        chip.setAttribute('data-repo', slug);
+        chip.innerHTML = slug + ' <span class="remove" onclick="event.stopPropagation(); removeExploredRepo(\'' + slug + '\')">&times;</span>';
+        chip.onclick = function() {
+            // Scroll to that org in tree
+            const orgLabels = document.querySelectorAll('.tree-org-label');
+            for (const label of orgLabels) {
+                if (label.textContent.includes(slug)) {
+                    label.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    label.style.background = 'rgba(139, 92, 246, 0.2)';
+                    setTimeout(() => label.style.background = '', 1500);
+                    break;
+                }
+            }
+        };
+        container.appendChild(chip);
+    }
+
+    function removeExploredRepo(slug) {
+        // Remove from DEMO_DATA
+        DEMO_DATA.skills = DEMO_DATA.skills.filter(s => s.org !== slug);
+        DEMO_DATA.memories = DEMO_DATA.memories.filter(m => m.org !== slug);
+        analyzedRepos.delete(slug);
+
+        // Remove chip
+        const chip = document.querySelector('[data-repo="' + slug + '"]');
+        if (chip) chip.remove();
+
+        // Re-render
+        allMemories = [];
+        const tree = buildTree();
+        renderTree(tree);
+        tabLoaded.timeline = false;
+        tabLoaded.search = false;
+        tabLoaded.analytics = false;
+        tabLoaded.sync = false;
+    }
+
+    async function analyzeRepo() {
+        const input = document.getElementById('explore-input').value;
+        const slug = parseRepoInput(input);
+        if (!slug) {
+            setExploreStatus('Invalid format. Use: owner/repo or github.com/owner/repo', true);
+            return;
+        }
+        if (analyzedRepos.has(slug)) {
+            setExploreStatus(slug + ' is already loaded');
+            return;
+        }
+        if (ghRateRemaining < 8) {
+            setExploreStatus('Rate limit too low (' + ghRateRemaining + ' remaining). Wait for reset.', true);
+            return;
+        }
+
+        const btn = document.getElementById('explore-btn');
+        btn.classList.add('loading');
+        btn.disabled = true;
+
+        try {
+            const data = await fetchRepoData(slug);
+            setExploreStatus('Generating skills and memories...');
+            const generated = generateSkillsFromRepo(data);
+            integrateRepoData(slug, generated);
+            setExploreStatus('Added ' + generated.skills.length + ' skills and ' + generated.memories.length + ' memories for ' + slug);
+            document.getElementById('explore-input').value = '';
+        } catch (err) {
+            setExploreStatus('Error: ' + err.message, true);
+        } finally {
+            btn.classList.remove('loading');
+            btn.disabled = false;
+        }
+    }
+
+    async function loadShowcase(slug) {
+        if (analyzedRepos.has(slug)) {
+            setExploreStatus(slug + ' is already loaded');
+            return;
+        }
+
+        // Try pre-generated showcase data first
+        if (window.SHOWCASE_DATA && window.SHOWCASE_DATA[slug]) {
+            setExploreStatus('Loading pre-analyzed data for ' + slug + '...');
+            // Transform showcase format to match generateSkillsFromRepo expectations
+            const sc = window.SHOWCASE_DATA[slug];
+            const adapted = {
+                slug: slug,
+                repoData: sc.repo,
+                languages: sc.languages,
+                readmeExcerpt: sc.readme_excerpt || '',
+                tree: sc.tree || [],
+                commits: [],
+                releases: sc.releases || [],
+                contributors: sc.contributors || [],
+                generatedAt: sc.generated_at,
+            };
+            const generated = generateSkillsFromRepo(adapted);
+            integrateRepoData(slug, generated);
+            setExploreStatus('Loaded ' + slug + ' (pre-analyzed, no API calls used)');
+            return;
+        }
+
+        // Fall back to live API
+        document.getElementById('explore-input').value = slug;
+        await analyzeRepo();
+    }
+
+    // URL param support: ?repo=owner/repo
+    function checkUrlParam() {
+        const params = new URLSearchParams(window.location.search);
+        const repoParam = params.get('repo');
+        if (repoParam) {
+            const slug = parseRepoInput(repoParam);
+            if (slug) {
+                setTimeout(() => loadShowcase(slug), 500);
+            }
+        }
+    }
+
+    // Restore cached repos on load
+    function restoreCachedRepos() {
+        const cache = getExploreCache();
+        for (const slug of Object.keys(cache)) {
+            if (analyzedRepos.has(slug)) continue;
+            try {
+                const generated = generateSkillsFromRepo(cache[slug]);
+                integrateRepoData(slug, generated);
+            } catch {}
+        }
+    }
+
+    // ==========================================
     // Bootstrap
     // ==========================================
     (async function() {
@@ -2593,6 +3161,12 @@ engram.<span class="func">track</span>({
                     if (firstFile) firstFile.classList.add('active');
                 }, 100);
             }
+
+            // Restore previously analyzed repos from cache
+            restoreCachedRepos();
+
+            // Check URL params for ?repo=owner/repo
+            checkUrlParam();
         } catch (err) {
             document.getElementById('tree-loading').innerHTML =
                 '<div class="demo-error">Failed to load demo: ' + err.message + '</div>';

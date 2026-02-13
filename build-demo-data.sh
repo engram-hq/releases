@@ -67,5 +67,9 @@ for org, dirpath in mem_sources:
 with open('$SCRIPT_DIR/demo-data.json', 'w') as out:
     json.dump(data, out, indent=2)
 
-print(f'Generated demo-data.json: {len(data[\"skills\"])} skills, {len(data[\"memories\"])} memories')
+# Also generate demo-data.js (window.ENGRAM_DEMO_DATA wrapper) for sync script tag loading
+with open('$SCRIPT_DIR/demo-data.js', 'w') as out:
+    out.write('window.ENGRAM_DEMO_DATA=' + json.dumps(data, separators=(',', ':')) + ';')
+
+print(f'Generated demo-data.json + demo-data.js: {len(data[\"skills\"])} skills, {len(data[\"memories\"])} memories')
 "
