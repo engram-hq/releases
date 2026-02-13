@@ -2125,13 +2125,16 @@ engram.<span class="func">track</span>({
             }
         }
 
-        // Assign chronological index to each node
-        // Memories first (sorted by date), then skills (sorted by org)
-        const memNodes = nodes.filter(n => n.nodeType === 'session').sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-        const skillNodes = nodes.filter(n => n.nodeType === 'skill').sort((a, b) => (a.org || '').localeCompare(b.org || ''));
-        let chronoIdx = 1;
-        for (const n of memNodes) n.chronoIndex = chronoIdx++;
-        for (const n of skillNodes) n.chronoIndex = chronoIdx++;
+        // Assign chronological index per org: memories (by date) then skills
+        const orgs = [...new Set(nodes.map(n => n.org))];
+        for (const org of orgs) {
+            const orgMems = nodes.filter(n => n.org === org && n.nodeType === 'session')
+                .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+            const orgSkillNodes = nodes.filter(n => n.org === org && n.nodeType === 'skill');
+            let idx = 1;
+            for (const n of orgMems) n.chronoIndex = idx++;
+            for (const n of orgSkillNodes) n.chronoIndex = idx++;
+        }
 
         // Init 3D graph
         const container = document.getElementById('tl-graph-container');
@@ -2329,7 +2332,7 @@ engram.<span class="func">track</span>({
             }
         }
         legendHtml += '</div>';
-        legendHtml += '<div style="font-size:0.62rem;color:rgba(255,255,255,0.35);border-top:1px solid rgba(255,255,255,0.06);padding-top:4px;">&#9679; Sphere = Memory &middot; &#9670; Diamond = Skill &middot; Superscript = chronological order &middot; Size = cost &middot; Particles = data flow</div>';
+        legendHtml += '<div style="font-size:0.62rem;color:rgba(255,255,255,0.35);border-top:1px solid rgba(255,255,255,0.06);padding-top:4px;">&#9679; Sphere = Memory &middot; &#9670; Diamond = Skill &middot; Number = per-org sequence &middot; Size = cost &middot; Particles = data flow</div>';
         legendHtml += '</div>';
         legend.innerHTML = legendHtml;
         container.appendChild(legend);
