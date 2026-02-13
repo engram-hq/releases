@@ -22,6 +22,7 @@ skill_sources = [
     ('engram-hq', '.skills', 2, os.path.join(orgs_dir, 'engram-hq/.skills'), ''),
     ('sreniatnoc', '.skills', 2, os.path.join(orgs_dir, 'sreniatnoc/.skills'), ''),
     ('sreniatnoc', 'rusd', 3, os.path.join(orgs_dir, 'sreniatnoc/rusd/.skills'), '.skills/'),
+    ('ARTIFACTIQ', '.skills', 2, os.path.join(orgs_dir, 'ARTIFACTIQ/.skills'), ''),
 ]
 
 for org, repo, tier, base_dir, prefix in skill_sources:
@@ -45,6 +46,7 @@ for org, repo, tier, base_dir, prefix in skill_sources:
 mem_sources = [
     ('engram-hq', os.path.join(orgs_dir, 'engram-hq/.memory/sessions')),
     ('sreniatnoc', os.path.join(orgs_dir, 'sreniatnoc/.memory/sessions')),
+    ('ARTIFACTIQ', os.path.join(orgs_dir, 'ARTIFACTIQ/.memory/sessions')),
 ]
 
 for org, dirpath in mem_sources:
