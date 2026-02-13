@@ -2232,20 +2232,30 @@ engram.<span class="func">track</span>({
                 // Helper: create a canvas-based number sprite
                 function makeNumberSprite(num, color) {
                     const canvas = document.createElement('canvas');
-                    canvas.width = 64;
-                    canvas.height = 64;
+                    canvas.width = 128;
+                    canvas.height = 128;
                     const ctx = canvas.getContext('2d');
-                    ctx.font = 'bold 36px -apple-system, sans-serif';
+                    // Dark background disc for contrast
+                    ctx.beginPath();
+                    ctx.arc(64, 64, 52, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(2,2,5,0.85)';
+                    ctx.fill();
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = color;
+                    ctx.globalAlpha = 0.6;
+                    ctx.stroke();
+                    // Number text
+                    ctx.globalAlpha = 1.0;
+                    ctx.font = 'bold 56px -apple-system, sans-serif';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    // Glow effect
                     ctx.shadowColor = color;
-                    ctx.shadowBlur = 8;
+                    ctx.shadowBlur = 12;
                     ctx.fillStyle = '#ffffff';
-                    ctx.globalAlpha = 0.75;
-                    ctx.fillText(String(num), 32, 32);
+                    ctx.fillText(String(num), 64, 66);
                     const texture = new THREE.CanvasTexture(canvas);
-                    const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
+                    texture.needsUpdate = true;
+                    const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false, sizeAttenuation: true });
                     const sprite = new THREE.Sprite(spriteMat);
                     return sprite;
                 }
@@ -2267,8 +2277,10 @@ engram.<span class="func">track</span>({
                     // Add chronological number as superscript sprite
                     if (node.chronoIndex) {
                         const numSprite = makeNumberSprite(node.chronoIndex, node.color);
-                        numSprite.scale.set(radius * 1.6, radius * 1.6, 1);
-                        numSprite.position.set(radius * 0.9, radius * 1.1, 0);
+                        const badgeSize = Math.max(radius * 2.2, 6);
+                        numSprite.scale.set(badgeSize, badgeSize, 1);
+                        numSprite.position.set(radius * 1.2, radius * 1.4, 0);
+                        numSprite.renderOrder = 999;
                         group.add(numSprite);
                     }
                     return group;
