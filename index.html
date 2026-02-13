@@ -1975,6 +1975,7 @@ engram.<span class="func">track</span>({
                 inputTokens: fm.input_tokens ? parseInt(fm.input_tokens) : null,
                 outputTokens: fm.output_tokens ? parseInt(fm.output_tokens) : null,
                 apiCalls: fm.api_calls ? parseInt(fm.api_calls) : null,
+                chronoIndex: mem.chronoIndex || null,
             });
         }
         allMemories.sort((a, b) => a.date.localeCompare(b.date));
@@ -2006,6 +2007,7 @@ engram.<span class="func">track</span>({
                 org: sk.org, repo: sk.repo, tier: sk.tier, path: sk.path,
                 name: fm.name || sk.name.replace('.md', ''),
                 words: wordCount(sk.content), content: sk.content,
+                chronoIndex: sk.chronoIndex || null,
             };
         });
 
@@ -2046,6 +2048,7 @@ engram.<span class="func">track</span>({
                 x: (dateIdx / Math.max(uniqueDates.length - 1, 1) - 0.5) * 280,
                 y: (orgIdx - orgKeys.length / 2) * 80,
                 z: (Math.random() - 0.5) * 100,
+                chronoIndex: m.chronoIndex,
                 memData: m,
             });
         }
@@ -2061,6 +2064,7 @@ engram.<span class="func">track</span>({
                 x: (Math.random() - 0.5) * 200,
                 y: (orgIdx - orgKeys.length / 2) * 80 + (Math.random() - 0.5) * 50,
                 z: (Math.random() - 0.5) * 100,
+                chronoIndex: s.chronoIndex,
                 skillData: s,
             });
         }
@@ -2125,16 +2129,7 @@ engram.<span class="func">track</span>({
             }
         }
 
-        // Assign chronological index per org: memories (by date) then skills
-        const orgs = [...new Set(nodes.map(n => n.org))];
-        for (const org of orgs) {
-            const orgMems = nodes.filter(n => n.org === org && n.nodeType === 'session')
-                .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-            const orgSkillNodes = nodes.filter(n => n.org === org && n.nodeType === 'skill');
-            let idx = 1;
-            for (const n of orgMems) n.chronoIndex = idx++;
-            for (const n of orgSkillNodes) n.chronoIndex = idx++;
-        }
+        // chronoIndex is pre-computed per-org in demo-data by refresh-demo-data.py
 
         // Init 3D graph
         const container = document.getElementById('tl-graph-container');

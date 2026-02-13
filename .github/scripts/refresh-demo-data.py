@@ -11,10 +11,40 @@ This ensures data is always the latest available and never lost due to partial f
 Uses GH_TOKEN env var for private repos, falls back to unauthenticated for public.
 To add new data: edit demo-sources.json and re-run this script or the workflow.
 """
-import json, os, sys, urllib.request, datetime
+import json, os, re, sys, urllib.request, datetime
 
 
 GH_TOKEN = os.environ.get("GH_TOKEN", "")
+
+
+def extract_date(item):
+    """Extract date from YAML frontmatter or filename (YYYY-MM-DD prefix)."""
+    content = item.get("content", "")
+    m = re.search(r'^date:\s*["\']?(\d{4}-\d{2}-\d{2})', content, re.MULTILINE)
+    if m:
+        return m.group(1)
+    m = re.match(r'(\d{4}-\d{2}-\d{2})', item.get("name", ""))
+    if m:
+        return m.group(1)
+    return ""
+
+
+def assign_chrono_index(skills, memories):
+    """Assign per-org chronoIndex: memories (by date) then skills."""
+    orgs = sorted(set(m["org"] for m in memories) | set(s["org"] for s in skills))
+    for org in orgs:
+        org_mems = sorted(
+            [m for m in memories if m["org"] == org],
+            key=lambda m: extract_date(m),
+        )
+        org_skills = [s for s in skills if s["org"] == org]
+        idx = 1
+        for m in org_mems:
+            m["chronoIndex"] = idx
+            idx += 1
+        for s in org_skills:
+            s["chronoIndex"] = idx
+            idx += 1
 
 
 def fetch_raw(org, repo, path):
@@ -128,6 +158,11 @@ def main():
     if not skills and not memories:
         print("ERROR: No data at all (fetched or cached)", file=sys.stderr)
         sys.exit(1)
+
+    # Pre-compute per-org chronological index
+    assign_chrono_index(skills, memories)
+    indexed = sum(1 for m in memories if "chronoIndex" in m) + sum(1 for s in skills if "chronoIndex" in s)
+    print(f"Assigned chronoIndex to {indexed} items")
 
     data = {
         "skills": skills,
