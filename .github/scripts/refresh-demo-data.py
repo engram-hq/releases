@@ -1,15 +1,33 @@
 #!/usr/bin/env python3
-"""Fetch skills and memories from public GitHub repos into demo-data.json.
+"""Fetch skills and memories from GitHub repos into demo-data.json + demo-data.js.
 
 Reads demo-sources.json for the list of repos to scan.
-All fetches use raw.githubusercontent.com (no auth, no rate limit).
+Uses GH_TOKEN env var for private repos, falls back to unauthenticated for public.
 To add new data: edit demo-sources.json and re-run this script or the workflow.
 """
 import json, os, sys, urllib.request, datetime
 
 
+GH_TOKEN = os.environ.get("GH_TOKEN", "")
+
+
 def fetch_raw(org, repo, path):
-    """Fetch raw file from public repo (no auth needed)."""
+    """Fetch raw file content. Uses GitHub API with auth for private repos."""
+    # Try authenticated API first (works for private repos)
+    if GH_TOKEN:
+        api_url = f"https://api.github.com/repos/{org}/{repo}/contents/{path}"
+        req = urllib.request.Request(api_url, headers={
+            "Authorization": f"Bearer {GH_TOKEN}",
+            "Accept": "application/vnd.github.raw+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+        })
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                return resp.read().decode("utf-8")
+        except Exception:
+            pass
+
+    # Fallback: raw.githubusercontent.com (public repos only)
     url = f"https://raw.githubusercontent.com/{org}/{repo}/main/{path}"
     try:
         with urllib.request.urlopen(url, timeout=15) as resp:
@@ -30,6 +48,9 @@ def main():
         "memories": [],
         "generated_at": datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
+
+    auth_status = "authenticated" if GH_TOKEN else "unauthenticated (public repos only)"
+    print(f"Mode: {auth_status}")
 
     # Fetch skills
     for s in sources.get("skills", []):
@@ -67,6 +88,12 @@ def main():
     with open("demo-data.json", "w") as out:
         json.dump(data, out, indent=2)
     print("Wrote demo-data.json")
+
+    # Also generate demo-data.js for instant script-tag loading (no fetch/CORS)
+    compact = json.dumps(data, separators=(",", ":"))
+    with open("demo-data.js", "w") as out:
+        out.write(f"window.ENGRAM_DEMO_DATA={compact};")
+    print(f"Wrote demo-data.js ({len(compact)} bytes)")
 
 
 if __name__ == "__main__":

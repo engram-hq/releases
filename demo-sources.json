@@ -1,9 +1,19 @@
 {
   "skills": [
     { "org": "engram-hq", "repo": ".skills", "tier": 2, "path": "org-knowledge/SKILL.md" },
+    { "org": "engram-hq", "repo": ".skills", "tier": 2, "path": "cost-tracking/SKILL.md" },
     { "org": "sreniatnoc", "repo": ".skills", "tier": 2, "path": "org-knowledge/SKILL.md" },
     { "org": "sreniatnoc", "repo": "rusd", "tier": 3, "path": ".skills/kind-validation.md" },
-    { "org": "engram-hq", "repo": ".skills", "tier": 2, "path": "cost-tracking/SKILL.md" }
+    { "org": "ARTIFACTIQ", "repo": ".skills", "tier": 2, "path": "org-knowledge/SKILL.md" },
+    { "org": "ARTIFACTIQ", "repo": ".skills", "tier": 2, "path": "training/ml-training.md" },
+    { "org": "ARTIFACTIQ", "repo": ".skills", "tier": 2, "path": "training/shard-training.md" },
+    { "org": "ARTIFACTIQ", "repo": ".skills", "tier": 2, "path": "training/e10-wavg-anchoring.md" },
+    { "org": "mlOS-foundation", "repo": ".skills", "tier": 2, "path": "org-knowledge/SKILL.md" },
+    { "org": "traceloop-ai", "repo": ".skills", "tier": 2, "path": "org-knowledge/SKILL.md" },
+    { "org": "reccaller-ai", "repo": ".skills", "tier": 2, "path": "org-knowledge/SKILL.md" },
+    { "org": "prepguides", "repo": ".skills", "tier": 2, "path": "org-knowledge/SKILL.md" },
+    { "org": "go-foundations", "repo": ".skills", "tier": 2, "path": "org-knowledge/SKILL.md" },
+    { "org": "fedai-oss", "repo": ".skills", "tier": 2, "path": "org-knowledge/SKILL.md" }
   ],
   "memories": [
     { "org": "engram-hq", "path": "sessions/2026-02-11-platform-scaffold.md" },

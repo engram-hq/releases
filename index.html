@@ -491,10 +491,14 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Live Demo */
+        /* Live Demo - full-width immersive */
         .demo {
-            padding: 6rem 0;
+            padding: 4rem 0 6rem;
             border-top: 1px solid var(--border);
+        }
+
+        .demo > .container {
+            max-width: 1440px;
         }
 
         .demo h2 {
@@ -533,7 +537,7 @@
             display: grid;
             grid-template-columns: 320px 1fr;
             gap: 1.5rem;
-            min-height: 500px;
+            min-height: 600px;
         }
 
         .demo-sidebar {
@@ -742,99 +746,111 @@
         .demo-tab-panel { display: none; }
         .demo-tab-panel.active { display: block; }
 
-        /* Memory Timeline */
-        .timeline {
-            position: relative;
-            padding: 1rem 0;
-        }
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 20px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--primary), rgba(139, 92, 246, 0.2));
-        }
-        .timeline-item {
-            position: relative;
-            margin-left: 50px;
-            margin-bottom: 1.5rem;
-            cursor: pointer;
-        }
-        .timeline-dot {
-            position: absolute;
-            left: -38px;
-            top: 12px;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--primary);
-            border: 3px solid var(--bg);
-            box-shadow: 0 0 0 2px var(--primary);
-            transition: transform 0.2s;
-        }
-        .timeline-item:hover .timeline-dot { transform: scale(1.3); }
-        .timeline-item.active .timeline-dot {
-            background: var(--primary-light);
-            box-shadow: 0 0 0 2px var(--primary-light), 0 0 12px rgba(139, 92, 246, 0.4);
-        }
-        .timeline-card {
-            background: var(--bg-card);
+        /* 3D Timeline Graph */
+        .timeline-3panel {
+            display: grid;
+            grid-template-columns: 200px 1fr 340px;
+            height: 720px;
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 1rem 1.25rem;
-            transition: all 0.2s;
-        }
-        .timeline-item:hover .timeline-card {
-            border-color: rgba(139, 92, 246, 0.4);
-            background: var(--bg-card-hover);
-        }
-        .timeline-item.active .timeline-card {
-            border-color: var(--primary);
-            background: rgba(139, 92, 246, 0.08);
-        }
-        .timeline-date {
-            font-size: 0.75rem;
-            color: var(--primary-light);
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-        .timeline-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 0.35rem;
-        }
-        .timeline-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            font-size: 0.75rem;
-        }
-        .timeline-tag {
-            background: rgba(139, 92, 246, 0.1);
-            color: var(--primary-light);
-            padding: 0.15rem 0.5rem;
-            border-radius: 999px;
-            font-weight: 500;
-        }
-        .timeline-tag.org { background: rgba(6, 182, 212, 0.1); color: #22d3ee; }
-        .timeline-tag.repo { background: rgba(34, 197, 94, 0.1); color: #4ade80; }
-        .timeline-summary {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 0.5rem;
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            border-radius: 12px;
             overflow: hidden;
+            background: var(--bg-dark);
         }
-        .timeline-empty {
-            text-align: center;
-            padding: 3rem 1rem;
+        .tl-left {
+            background: rgba(255,255,255,0.02);
+            border-right: 1px solid var(--border);
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .tl-left h4 {
+            font-size: 0.72rem;
             color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.6rem;
+        }
+        .tl-org-item {
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 0.15rem;
+            transition: all 0.15s;
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .tl-org-item:hover { background: var(--bg-card-hover); }
+        .tl-org-item.active { background: rgba(139,92,246,0.15); color: var(--primary-light); }
+        .tl-org-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            display: inline-block; margin-right: 6px; flex-shrink: 0;
+        }
+        .tl-count {
+            font-size: 0.68rem; color: var(--text-muted);
+            background: rgba(255,255,255,0.05); padding: 0.1rem 0.4rem; border-radius: 999px;
+        }
+        .tl-session-list { margin: 0.2rem 0 0.4rem 1.25rem; }
+        .tl-session-item {
+            padding: 0.2rem 0.45rem; border-radius: 5px; cursor: pointer;
+            font-size: 0.73rem; color: var(--text-muted); transition: all 0.15s;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .tl-session-item:hover { background: var(--bg-card-hover); color: var(--text); }
+        .tl-session-item.active { color: var(--primary-light); background: rgba(139,92,246,0.1); }
+        .tl-graph {
+            position: relative; overflow: hidden; background: #050508;
+        }
+        .tl-graph canvas { display: block; }
+        .tl-legend {
+            position: absolute; bottom: 0.75rem; left: 0.75rem;
+            display: flex; gap: 0.75rem; font-size: 0.7rem; color: var(--text-muted);
+            background: rgba(9,9,11,0.85); padding: 0.35rem 0.75rem;
+            border-radius: 6px; backdrop-filter: blur(4px); z-index: 10; pointer-events: none;
+        }
+        .tl-legend-item { display: flex; align-items: center; gap: 4px; }
+        .tl-legend-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+        .tl-hint {
+            position: absolute; top: 0.75rem; right: 0.75rem;
+            font-size: 0.7rem; color: rgba(255,255,255,0.3); z-index: 10; pointer-events: none;
+        }
+        .tl-right {
+            background: rgba(255,255,255,0.02);
+            border-left: 1px solid var(--border);
+            padding: 1.25rem; overflow-y: auto;
+        }
+        .tl-right h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+        .tl-metrics {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin-bottom: 1rem;
+        }
+        .tl-metric-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 8px; padding: 0.45rem 0.6rem;
+        }
+        .tl-metric-card .label { font-size: 0.63rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+        .tl-metric-card .value { font-size: 0.88rem; font-weight: 600; }
+        .tl-detail-content {
+            font-size: 0.82rem; line-height: 1.6; color: var(--text-muted);
+        }
+        .tl-detail-content h1, .tl-detail-content h2 { font-size: 0.95rem; color: var(--text); margin: 0.75rem 0 0.3rem; }
+        .tl-detail-content h3, .tl-detail-content h4 { font-size: 0.85rem; color: var(--text); margin: 0.5rem 0 0.2rem; }
+        .tl-detail-content p { margin-bottom: 0.4rem; }
+        .tl-detail-content code { background: var(--code-bg); padding: 0.1rem 0.25rem; border-radius: 3px; font-size: 0.78rem; }
+        .tl-detail-content pre { background: var(--code-bg); padding: 0.75rem; border-radius: 6px; overflow-x: auto; margin: 0.5rem 0; font-size: 0.75rem; }
+        .tl-detail-content ul, .tl-detail-content ol { padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .tl-detail-content table { width: 100%; border-collapse: collapse; margin: 0.5rem 0; font-size: 0.75rem; }
+        .tl-detail-content th, .tl-detail-content td { padding: 0.3rem 0.5rem; border: 1px solid var(--border); text-align: left; }
+        .tl-detail-content th { background: var(--bg-card); font-weight: 600; }
+        .tl-placeholder {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%; text-align: center; color: var(--text-muted); font-size: 0.85rem;
+        }
+        .tl-placeholder .icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.5; }
+        @media (max-width: 900px) {
+            .timeline-3panel { grid-template-columns: 1fr; height: auto; }
+            .tl-left { border-right: none; border-bottom: 1px solid var(--border); max-height: 150px; }
+            .tl-graph { height: 400px; }
+            .tl-right { border-left: none; border-top: 1px solid var(--border); }
         }
 
         .tier-badge-sm.t2 { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
@@ -1237,19 +1253,31 @@
             </div>
 
             <div class="demo-tab-panel" id="panel-timeline">
-                <div class="demo-container">
-                    <div class="demo-sidebar" id="timeline-sidebar">
-                        <h3>Session Timeline</h3>
+                <div class="timeline-3panel">
+                    <div class="tl-left" id="tl-left-panel">
+                        <h4>Organizations</h4>
+                        <div id="tl-org-tree"></div>
+                        <div style="margin-top:1rem;padding-top:0.75rem;border-top:1px solid var(--border);">
+                            <h4 style="margin-top:0;">Guide</h4>
+                            <div style="font-size:0.72rem;color:var(--text-muted);line-height:1.5;">
+                                <div>&#9679; Larger = higher cost</div>
+                                <div>&#8594; Chronological flow</div>
+                                <div>&#9889; = Skill node</div>
+                                <div style="margin-top:0.35rem;">Click node for details</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tl-graph" id="tl-graph-container">
                         <div class="demo-loading" id="timeline-loading">
                             <div class="spinner"></div>
-                            <span>Loading memories...</span>
+                            <span>Building knowledge graph...</span>
                         </div>
-                        <div class="timeline" id="timeline-content"></div>
+                        <div class="tl-hint">Drag to rotate &middot; Scroll to zoom</div>
                     </div>
-                    <div class="demo-content" id="timeline-viewer">
-                        <div class="demo-placeholder">
-                            <div class="icon">&#128218;</div>
-                            <p>Select a session from the timeline to see the full session log - goals, phases, decisions, and lessons learned.</p>
+                    <div class="tl-right" id="tl-detail-panel">
+                        <div class="tl-placeholder">
+                            <div class="icon">&#127760;</div>
+                            <p>Hover over nodes to see metrics.<br>Click a session to view full details.</p>
                         </div>
                     </div>
                 </div>
@@ -1304,8 +1332,8 @@
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(6, 182, 212, 0.15); color: #22d3ee;">&#129504;</div>
                     <span class="feature-status status-live">Live Demo</span>
-                    <h3>Memory Timeline</h3>
-                    <p>Vertical timeline of all agent session memories, grouped by date. Filter by org, type, and date range. See goals, repos, and session details.</p>
+                    <h3>3D Knowledge Graph</h3>
+                    <p>Interactive 3D force-directed graph of sessions and skills. Nodes sized by cost, linked chronologically. Hover for metrics, click for full details.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(34, 197, 94, 0.15); color: #4ade80;">&#128176;</div>
@@ -1430,41 +1458,35 @@ engram.<span class="func">track</span>({
             <p>&copy; 2026 Engram. Built by <a href="https://ishaileshpant.github.io">Shailesh Pant</a>.</p>
         </div>
     </footer>
+    <script src="demo-data.js"></script>
+    <script src="https://unpkg.com/3d-force-graph"></script>
     <script>
     // ==========================================
-    // LIVE DEMO - Static data with 15min cache
+    // LIVE DEMO - Instant load via script tag
     // ==========================================
-    // Data served from demo-data.json (generated by build-demo-data.sh)
-    // Refresh: ./build-demo-data.sh && git push
+    // Data loaded via demo-data.js (sync script tag, no fetch/CORS issues)
+    // Fallback: fetch demo-data.json for HTTP deployments
+    // Generated by CI workflow: refresh-demo.yml
 
-    const CACHE_KEY = 'engram-demo-v2';
-    const CACHE_TTL = 15 * 60 * 1000; // 15 minutes
-
-    let DEMO_DATA = null; // { skills: [...], memories: [...] }
+    let DEMO_DATA = null;
 
     async function loadDemoData() {
-        // Check sessionStorage cache
+        // Priority 1: Inline script tag (instant, works from file://)
+        if (window.ENGRAM_DEMO_DATA) {
+            DEMO_DATA = window.ENGRAM_DEMO_DATA;
+            return DEMO_DATA;
+        }
+
+        // Priority 2: Fetch JSON (HTTP/HTTPS deployments)
         try {
-            const cached = sessionStorage.getItem(CACHE_KEY);
-            if (cached) {
-                const parsed = JSON.parse(cached);
-                if (Date.now() - parsed.ts < CACHE_TTL) {
-                    DEMO_DATA = parsed.data;
-                    return DEMO_DATA;
-                }
+            const res = await fetch('demo-data.json');
+            if (res.ok) {
+                DEMO_DATA = await res.json();
+                return DEMO_DATA;
             }
         } catch (e) {}
 
-        // Fetch static JSON
-        const res = await fetch('demo-data.json');
-        if (!res.ok) throw new Error('Failed to load demo data');
-        DEMO_DATA = await res.json();
-
-        try {
-            sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: DEMO_DATA }));
-        } catch (e) {}
-
-        return DEMO_DATA;
+        throw new Error('Demo data not available. Ensure demo-data.js or demo-data.json exists.');
     }
 
     // Get content for a skill/memory by org+repo+path
@@ -1677,7 +1699,7 @@ engram.<span class="func">track</span>({
 
         if (!tabLoaded[tab]) {
             tabLoaded[tab] = true;
-            if (tab === 'timeline') loadTimeline();
+            if (tab === 'timeline') initTimelineGraph();
             else if (tab === 'search') initSearch();
             else if (tab === 'analytics') initAnalytics();
             else if (tab === 'sync') initSync();
@@ -1685,124 +1707,348 @@ engram.<span class="func">track</span>({
     }
 
     // ==========================================
-    // Memory Timeline
+    // 3D Timeline Graph
     // ==========================================
     let allMemories = [];
+    let _tlOrgTree = {};
+    const ORG_COLORS = {
+        'engram-hq': '#a78bfa', 'sreniatnoc': '#22d3ee', 'ARTIFACTIQ': '#f59e0b',
+        'mlOS-foundation': '#f472b6', 'traceloop-ai': '#34d399', 'reccaller-ai': '#fb923c',
+        'prepguides': '#60a5fa', 'go-foundations': '#a3e635', 'fedai-oss': '#c084fc',
+        'ishaileshpant': '#fbbf24',
+    };
+    const DEFAULT_NODE_COLOR = '#4ade80';
 
-    function loadTimeline() {
-        const memories = [];
-
+    function buildMemories() {
+        if (allMemories.length > 0) return allMemories;
         for (const mem of DEMO_DATA.memories) {
-            const content = mem.content;
-            const fm = parseFrontmatter(content);
-            const bodyStart = content.replace(/^---[\s\S]*?---\n*/m, '');
-            const summaryMatch = bodyStart.match(/## Summary\n\n([^\n]+)/);
-            const summary = summaryMatch ? summaryMatch[1] : bodyStart.split('\n\n').find(p => p.length > 20 && !p.startsWith('#')) || '';
-            const titleMatch = bodyStart.match(/^# (.+)$/m);
-            const title = titleMatch ? titleMatch[1] : mem.name.replace('.md', '').replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/-/g, ' ');
-
-            memories.push({
+            const fm = parseFrontmatter(mem.content);
+            const body = mem.content.replace(/^---[\s\S]*?---\n*/m, '');
+            const titleMatch = body.match(/^# (.+)$/m);
+            const summaryMatch = body.match(/## Summary\n\n([^\n]+)/);
+            allMemories.push({
+                id: 'mem-' + allMemories.length,
                 org: mem.org,
                 file: { name: mem.name, path: mem.path },
-                content,
+                content: mem.content,
                 date: fm.date || mem.name.match(/^(\d{4}-\d{2}-\d{2})/)?.[1] || 'unknown',
-                title,
-                summary: summary.replace(/\*\*/g, '').slice(0, 200),
+                title: (titleMatch ? titleMatch[1] : mem.name.replace('.md', '').replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/-/g, ' ')).replace('Session: ', ''),
+                summary: summaryMatch ? summaryMatch[1].replace(/\*\*/g, '').slice(0, 200) : '',
                 goal: fm.goal || '',
                 repo: fm.repo || '',
+                model: fm.model || '',
                 type: fm.type || 'session',
-                words: wordCount(content),
+                words: wordCount(mem.content),
+                cost: fm.cost_usd ? parseFloat(fm.cost_usd) : null,
+                inputTokens: fm.input_tokens ? parseInt(fm.input_tokens) : null,
+                outputTokens: fm.output_tokens ? parseInt(fm.output_tokens) : null,
+                apiCalls: fm.api_calls ? parseInt(fm.api_calls) : null,
             });
         }
-
-        memories.sort((a, b) => b.date.localeCompare(a.date));
-        allMemories = memories;
-
-        document.getElementById('timeline-loading').style.display = 'none';
-        renderTimeline(memories);
-
-        if (memories.length > 0) {
-            loadMemory(memories[0]);
-            setTimeout(() => {
-                const firstItem = document.querySelector('.timeline-item');
-                if (firstItem) firstItem.classList.add('active');
-            }, 100);
-        }
+        allMemories.sort((a, b) => a.date.localeCompare(b.date));
+        return allMemories;
     }
 
-    function renderTimeline(memories) {
-        const container = document.getElementById('timeline-content');
-        container.innerHTML = '';
-
-        if (memories.length === 0) {
-            container.innerHTML = '<div class="timeline-empty">No session memories found.</div>';
+    function initTimelineGraph() {
+        if (typeof ForceGraph3D === 'undefined') {
+            setTimeout(initTimelineGraph, 500);
             return;
         }
 
-        let lastDate = '';
-        for (const mem of memories) {
-            const item = document.createElement('div');
-            item.className = 'timeline-item';
+        const memories = buildMemories();
 
-            const dot = document.createElement('div');
-            dot.className = 'timeline-dot';
+        // Build skills data
+        const skills = DEMO_DATA.skills.map((sk, i) => {
+            const fm = parseFrontmatter(sk.content);
+            return {
+                id: 'skill-' + i, nodeType: 'skill',
+                org: sk.org, repo: sk.repo, tier: sk.tier, path: sk.path,
+                name: fm.name || sk.name.replace('.md', ''),
+                words: wordCount(sk.content), content: sk.content,
+            };
+        });
 
-            const card = document.createElement('div');
-            card.className = 'timeline-card';
-
-            const dateStr = mem.date !== lastDate ? mem.date : '';
-            lastDate = mem.date;
-
-            let tagsHtml = '';
-            if (mem.org) tagsHtml += '<span class="timeline-tag org">' + mem.org + '</span>';
-            if (mem.repo) tagsHtml += '<span class="timeline-tag repo">' + mem.repo + '</span>';
-            tagsHtml += '<span class="timeline-tag">' + mem.words + ' words</span>';
-
-            card.innerHTML =
-                (dateStr ? '<div class="timeline-date">' + dateStr + '</div>' : '') +
-                '<div class="timeline-title">' + mem.title + '</div>' +
-                '<div class="timeline-meta">' + tagsHtml + '</div>' +
-                (mem.summary ? '<div class="timeline-summary">' + mem.summary + '</div>' : '');
-
-            item.addEventListener('click', () => {
-                document.querySelectorAll('.timeline-item.active').forEach(el => el.classList.remove('active'));
-                item.classList.add('active');
-                loadMemory(mem);
-            });
-
-            item.appendChild(dot);
-            item.appendChild(card);
-            container.appendChild(item);
+        // Build org tree for left panel
+        _tlOrgTree = {};
+        for (const m of memories) {
+            if (!_tlOrgTree[m.org]) _tlOrgTree[m.org] = { sessions: [], repos: new Set() };
+            _tlOrgTree[m.org].sessions.push(m);
+            if (m.repo) m.repo.split(',').forEach(r => _tlOrgTree[m.org].repos.add(r.trim()));
         }
+        for (const s of skills) {
+            if (!_tlOrgTree[s.org]) _tlOrgTree[s.org] = { sessions: [], repos: new Set() };
+            _tlOrgTree[s.org].repos.add(s.repo);
+        }
+        renderOrgTree(null);
+
+        // Build graph nodes
+        const uniqueDates = [...new Set(memories.map(m => m.date))].sort();
+        const orgKeys = Object.keys(_tlOrgTree);
+        const nodes = [];
+        const links = [];
+
+        // Session nodes
+        for (const m of memories) {
+            const dateIdx = uniqueDates.indexOf(m.date);
+            const orgIdx = orgKeys.indexOf(m.org);
+            nodes.push({
+                id: m.id, nodeType: 'session', name: m.title, org: m.org,
+                date: m.date, cost: m.cost, model: m.model, words: m.words,
+                inputTokens: m.inputTokens, outputTokens: m.outputTokens, apiCalls: m.apiCalls,
+                val: m.cost ? Math.max(4, Math.sqrt(m.cost) * 1.8) : Math.max(3, m.words / 400),
+                color: ORG_COLORS[m.org] || DEFAULT_NODE_COLOR,
+                x: (dateIdx / Math.max(uniqueDates.length - 1, 1) - 0.5) * 250,
+                y: (orgIdx - orgKeys.length / 2) * 70,
+                z: (Math.random() - 0.5) * 80,
+                memData: m,
+            });
+        }
+
+        // Skill nodes (smaller, dimmer)
+        for (const s of skills) {
+            const orgIdx = orgKeys.indexOf(s.org);
+            const baseColor = ORG_COLORS[s.org] || DEFAULT_NODE_COLOR;
+            nodes.push({
+                id: s.id, nodeType: 'skill', name: s.name, org: s.org,
+                words: s.words, val: Math.max(1.5, s.words / 800),
+                color: baseColor + '99',
+                x: (Math.random() - 0.5) * 180,
+                y: (orgIdx - orgKeys.length / 2) * 70 + (Math.random() - 0.5) * 40,
+                z: (Math.random() - 0.5) * 80,
+                skillData: s,
+            });
+        }
+
+        // Links: chronological within same org
+        const byOrg = {};
+        for (const m of memories) {
+            if (!byOrg[m.org]) byOrg[m.org] = [];
+            byOrg[m.org].push(m);
+        }
+        for (const [org, orgMems] of Object.entries(byOrg)) {
+            orgMems.sort((a, b) => a.date.localeCompare(b.date));
+            for (let i = 0; i < orgMems.length - 1; i++) {
+                links.push({
+                    source: orgMems[i].id, target: orgMems[i + 1].id,
+                    color: (ORG_COLORS[org] || DEFAULT_NODE_COLOR) + 'aa',
+                });
+            }
+        }
+
+        // Links: skills to most recent session in same org (faint)
+        for (const s of skills) {
+            const orgSessions = byOrg[s.org] || [];
+            if (orgSessions.length > 0) {
+                links.push({
+                    source: s.id, target: orgSessions[orgSessions.length - 1].id,
+                    color: (ORG_COLORS[s.org] || DEFAULT_NODE_COLOR) + '33',
+                });
+            }
+        }
+
+        // Init 3D graph
+        const container = document.getElementById('tl-graph-container');
+        document.getElementById('timeline-loading').style.display = 'none';
+
+        const graph = ForceGraph3D()(container)
+            .graphData({ nodes, links })
+            .backgroundColor('#050508')
+            .width(container.clientWidth)
+            .height(container.clientHeight)
+            .nodeLabel(node => {
+                const icon = node.nodeType === 'skill' ? '&#9889;' : '&#128218;';
+                let html = '<div style="background:rgba(9,9,11,0.95);padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);color:#fafafa;font-size:13px;max-width:260px;font-family:-apple-system,sans-serif;">';
+                html += '<div style="font-weight:600;margin-bottom:3px;">' + icon + ' ' + node.name + '</div>';
+                if (node.nodeType === 'session') {
+                    html += '<div style="color:#a1a1aa;font-size:11px;">' + node.date + ' &middot; ' + node.org + '</div>';
+                    if (node.model) html += '<div style="color:#a1a1aa;font-size:11px;">Model: ' + node.model.replace('claude-', '') + '</div>';
+                    if (node.cost !== null) html += '<div style="color:#a78bfa;font-size:11px;font-weight:600;">Cost: $' + node.cost.toFixed(2) + '</div>';
+                    if (node.inputTokens) html += '<div style="color:#a1a1aa;font-size:11px;">Tokens: ' + (node.inputTokens / 1000).toFixed(0) + 'K in / ' + (node.outputTokens / 1000).toFixed(0) + 'K out</div>';
+                    if (node.apiCalls) html += '<div style="color:#a1a1aa;font-size:11px;">API calls: ' + node.apiCalls + '</div>';
+                } else {
+                    html += '<div style="color:#a1a1aa;font-size:11px;">' + node.org + ' &middot; Skill</div>';
+                }
+                html += '<div style="color:#a1a1aa;font-size:11px;">' + node.words.toLocaleString() + ' words</div>';
+                html += '</div>';
+                return html;
+            })
+            .nodeColor(n => n.color)
+            .nodeOpacity(0.92)
+            .nodeResolution(16)
+            .linkColor(l => l.color || 'rgba(255,255,255,0.08)')
+            .linkWidth(0.8)
+            .linkDirectionalArrowLength(3.5)
+            .linkDirectionalArrowRelPos(1)
+            .linkDirectionalParticles(2)
+            .linkDirectionalParticleWidth(1.2)
+            .linkDirectionalParticleSpeed(0.006)
+            .linkDirectionalParticleColor(l => {
+                const base = l.color || 'rgba(255,255,255,0.3)';
+                return base.length === 9 ? base.slice(0, 7) : base;
+            })
+            .onNodeClick(node => {
+                if (node.nodeType === 'session' && node.memData) {
+                    loadMemory(node.memData);
+                } else if (node.nodeType === 'skill' && node.skillData) {
+                    loadSkillInDetail(node.skillData);
+                }
+                // Fly camera to clicked node
+                const dist = 150;
+                const ratio = 1 + dist / Math.hypot(node.x, node.y, node.z);
+                graph.cameraPosition(
+                    { x: node.x * ratio, y: node.y * ratio, z: node.z * ratio },
+                    node, 1000
+                );
+            })
+            .onNodeHover(node => {
+                container.style.cursor = node ? 'pointer' : 'default';
+            })
+            .warmupTicks(80)
+            .cooldownTicks(200);
+
+        // Slow auto-rotate
+        const controls = graph.controls();
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.4;
+
+        // Set initial camera
+        setTimeout(() => {
+            graph.cameraPosition({ x: 0, y: 80, z: 300 }, { x: 0, y: 0, z: 0 }, 0);
+        }, 100);
+
+        // Add legend overlay
+        const legend = document.createElement('div');
+        legend.className = 'tl-legend';
+        let legendHtml = '';
+        for (const [org, color] of Object.entries(ORG_COLORS)) {
+            if (_tlOrgTree[org]) {
+                legendHtml += '<div class="tl-legend-item"><span class="tl-legend-dot" style="background:' + color + ';"></span>' + org + '</div>';
+            }
+        }
+        legend.innerHTML = legendHtml;
+        container.appendChild(legend);
+
+        // Store graph ref
+        window._tlGraph = graph;
+
+        // Handle resize
+        const ro = new ResizeObserver(() => {
+            graph.width(container.clientWidth);
+            graph.height(container.clientHeight);
+        });
+        ro.observe(container);
+
+        // Auto-select first session
+        if (memories.length > 0) loadMemory(memories[0]);
+    }
+
+    function renderOrgTree(activeFilter) {
+        const container = document.getElementById('tl-org-tree');
+        if (!container) return;
+        let html = '';
+
+        // "All" filter
+        const totalSessions = Object.values(_tlOrgTree).reduce((a, b) => a + b.sessions.length, 0);
+        html += '<div class="tl-org-item' + (!activeFilter ? ' active' : '') + '" onclick="filterGraph(null)">' +
+            '<span><span class="tl-org-dot" style="background:#a1a1aa;"></span> All</span>' +
+            '<span class="tl-count">' + totalSessions + '</span></div>';
+
+        for (const [org, data] of Object.entries(_tlOrgTree)) {
+            const color = ORG_COLORS[org] || DEFAULT_NODE_COLOR;
+            html += '<div class="tl-org-item' + (activeFilter === org ? ' active' : '') + '" onclick="filterGraph(\'' + org + '\')">' +
+                '<span><span class="tl-org-dot" style="background:' + color + ';"></span> ' + org + '</span>' +
+                '<span class="tl-count">' + data.sessions.length + '</span></div>';
+
+            html += '<div class="tl-session-list">';
+            for (const s of data.sessions) {
+                html += '<div class="tl-session-item" onclick="event.stopPropagation(); focusNode(\'' + s.id + '\')" title="' + escapeHtml(s.title) + '">' + escapeHtml(s.title) + '</div>';
+            }
+            html += '</div>';
+        }
+
+        container.innerHTML = html;
+    }
+
+    function filterGraph(org) {
+        if (!window._tlGraph) return;
+        window._tlGraph
+            .nodeVisibility(n => !org || n.org === org)
+            .linkVisibility(l => {
+                if (!org) return true;
+                const src = typeof l.source === 'object' ? l.source : null;
+                const tgt = typeof l.target === 'object' ? l.target : null;
+                return src && tgt && src.org === org && tgt.org === org;
+            });
+        renderOrgTree(org);
+    }
+
+    function focusNode(nodeId) {
+        if (!window._tlGraph) return;
+        const data = window._tlGraph.graphData();
+        const node = data.nodes.find(n => n.id === nodeId);
+        if (!node) return;
+
+        const dist = 150;
+        const ratio = 1 + dist / Math.hypot(node.x, node.y, node.z);
+        window._tlGraph.cameraPosition(
+            { x: node.x * ratio, y: node.y * ratio, z: node.z * ratio },
+            node, 1000
+        );
+
+        if (node.memData) loadMemory(node.memData);
+        else if (node.skillData) loadSkillInDetail(node.skillData);
     }
 
     function loadMemory(mem) {
-        const viewer = document.getElementById('timeline-viewer');
-        const content = mem.content || getContent(mem.org, '.memory', mem.file.path);
-        if (!content) {
-            viewer.innerHTML = '<div class="demo-error">Memory content not found.</div>';
-            return;
-        }
+        const panel = document.getElementById('tl-detail-panel');
+        const content = mem.content || '';
+        if (!content) { panel.innerHTML = '<div class="tl-placeholder"><p>Content not found.</p></div>'; return; }
 
         const fm = parseFrontmatter(content);
         const ghUrl = 'https://github.com/' + mem.org + '/.memory/blob/main/' + mem.file.path;
 
-        let metaTags = '';
-        metaTags += '<span class="meta-tag">&#128218; Session Memory</span>';
-        metaTags += '<span class="meta-tag tier-badge-sm t2">Tier 2 - Org</span>';
-        metaTags += '<span class="meta-tag">&#127970; ' + mem.org + '</span>';
-        if (fm.date) metaTags += '<span class="meta-tag">&#128197; ' + fm.date + '</span>';
-        if (fm.repo) metaTags += '<span class="meta-tag">&#128230; ' + fm.repo + '</span>';
+        // Metrics grid
+        let metrics = '<div class="tl-metrics">';
+        metrics += '<div class="tl-metric-card"><div class="label">Date</div><div class="value">' + (fm.date || mem.date || '-') + '</div></div>';
+        metrics += '<div class="tl-metric-card"><div class="label">Org</div><div class="value">' + mem.org + '</div></div>';
+        if (fm.model) metrics += '<div class="tl-metric-card"><div class="label">Model</div><div class="value">' + fm.model.replace('claude-', '').replace(/-/g, ' ') + '</div></div>';
+        if (fm.cost_usd) metrics += '<div class="tl-metric-card"><div class="label">Cost</div><div class="value" style="color:var(--primary-light);">$' + parseFloat(fm.cost_usd).toFixed(2) + '</div></div>';
+        if (fm.api_calls) metrics += '<div class="tl-metric-card"><div class="label">API Calls</div><div class="value">' + parseInt(fm.api_calls).toLocaleString() + '</div></div>';
+        metrics += '<div class="tl-metric-card"><div class="label">Words</div><div class="value">' + mem.words.toLocaleString() + '</div></div>';
+        if (fm.input_tokens) {
+            metrics += '<div class="tl-metric-card"><div class="label">Input</div><div class="value">' + (parseInt(fm.input_tokens) / 1000).toFixed(0) + 'K tok</div></div>';
+            metrics += '<div class="tl-metric-card"><div class="label">Output</div><div class="value">' + (parseInt(fm.output_tokens) / 1000).toFixed(0) + 'K tok</div></div>';
+        }
+        metrics += '</div>';
 
-        const shareText = mem.title + ' - ' + mem.org + ' session (' + mem.date + ', ' + mem.words + ' words)';
-        viewer.innerHTML =
-            '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;"><h3 style="margin:0;">' + mem.title + '</h3>' +
-            '<button class="share-btn" onclick="shareContent(\'' + escapeHtml(mem.title) + '\', \'' + escapeHtml(shareText) + '\', \'' + ghUrl + '\')">&#8599; Share</button></div>' +
-            (fm.goal ? '<p style="color: var(--text-muted); font-style: italic; margin-bottom: 1rem;">Goal: ' + fm.goal + '</p>' : '') +
-            '<div class="meta">' + metaTags + '</div>' +
-            '<div class="word-count">' + mem.words.toLocaleString() + ' words &middot; ' + mem.org + '/.memory/' + mem.file.path + '</div>' +
-            '<div class="rendered-md">' + renderMarkdown(content) + '</div>' +
-            '<a class="gh-link" href="' + ghUrl + '" target="_blank">&#128279; View on GitHub</a>';
+        const shareText = mem.title + ' - ' + mem.org + ' session';
+        panel.innerHTML =
+            '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">' +
+            '<h3 style="margin:0;flex:1;font-size:0.95rem;">' + escapeHtml(mem.title) + '</h3>' +
+            '<button class="share-btn" onclick="shareContent(\'' + escapeHtml(mem.title) + '\', \'' + escapeHtml(shareText) + '\', \'' + ghUrl + '\')">&#8599;</button></div>' +
+            (fm.goal ? '<p style="color:var(--text-muted);font-style:italic;font-size:0.8rem;margin-bottom:0.75rem;">Goal: ' + fm.goal + '</p>' : '') +
+            metrics +
+            '<div class="tl-detail-content">' + renderMarkdown(content) + '</div>' +
+            '<a style="display:inline-block;margin-top:0.75rem;font-size:0.8rem;color:var(--primary-light);" href="' + ghUrl + '" target="_blank">&#128279; View on GitHub</a>';
+    }
+
+    function loadSkillInDetail(skill) {
+        const panel = document.getElementById('tl-detail-panel');
+        const fm = parseFrontmatter(skill.content);
+        const ghUrl = 'https://github.com/' + skill.org + '/' + skill.repo + '/blob/main/' + skill.path;
+
+        let metrics = '<div class="tl-metrics">';
+        metrics += '<div class="tl-metric-card"><div class="label">Org</div><div class="value">' + skill.org + '</div></div>';
+        metrics += '<div class="tl-metric-card"><div class="label">Repo</div><div class="value">' + skill.repo + '</div></div>';
+        metrics += '<div class="tl-metric-card"><div class="label">Tier</div><div class="value">Tier ' + skill.tier + '</div></div>';
+        metrics += '<div class="tl-metric-card"><div class="label">Words</div><div class="value">' + skill.words.toLocaleString() + '</div></div>';
+        metrics += '</div>';
+
+        panel.innerHTML =
+            '<h3 style="font-size:0.95rem;">&#9889; ' + escapeHtml(skill.name) + '</h3>' +
+            metrics +
+            '<div class="tl-detail-content">' + renderMarkdown(skill.content) + '</div>' +
+            '<a style="display:inline-block;margin-top:0.75rem;font-size:0.8rem;color:var(--primary-light);" href="' + ghUrl + '" target="_blank">&#128279; View on GitHub</a>';
     }
 
     // ==========================================
@@ -1922,7 +2168,18 @@ engram.<span class="func">track</span>({
             if (skill) loadFile(org, repo, path, skill.tier, skill.tier === 3 ? 'project' : 'skills');
         } else {
             switchDemoTab('timeline');
-            const mem = allMemories.find(m => m.org === org && m.file.path === path);
+            let mem = allMemories.find(m => m.org === org && m.file.path === path);
+            if (!mem) {
+                // Timeline not loaded yet - build from raw data
+                const raw = DEMO_DATA.memories.find(m => m.org === org && m.path === path);
+                if (raw) {
+                    const fm = parseFrontmatter(raw.content);
+                    const body = raw.content.replace(/^---[\s\S]*?---\n*/m, '');
+                    const titleMatch = body.match(/^# (.+)$/m);
+                    mem = { org: raw.org, file: { name: raw.name, path: raw.path }, content: raw.content,
+                        date: fm.date || '', title: titleMatch ? titleMatch[1] : raw.name, words: wordCount(raw.content) };
+                }
+            }
             if (mem) loadMemory(mem);
         }
     }
