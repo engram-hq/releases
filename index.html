@@ -3128,9 +3128,21 @@ engram.<span class="func">track</span>({
 
         // Try pre-generated showcase data first
         if (window.SHOWCASE_DATA && window.SHOWCASE_DATA[slug]) {
-            setExploreStatus('Loading pre-analyzed data for ' + slug + '...');
-            // Transform showcase format to match generateSkillsFromRepo expectations
+            setExploreStatus('Loading AI-analyzed knowledge for ' + slug + '...');
             const sc = window.SHOWCASE_DATA[slug];
+
+            // Use pre-baked skills/memories if available (AI-generated, high quality)
+            if (sc.skills && sc.skills.length > 0) {
+                const generated = {
+                    skills: sc.skills,
+                    memories: sc.memories || [],
+                };
+                integrateRepoData(slug, generated);
+                setExploreStatus('Loaded ' + generated.skills.length + ' skills + ' + generated.memories.length + ' memories for ' + slug + ' (AI-analyzed)');
+                return;
+            }
+
+            // Fallback: generate from raw API data
             const adapted = {
                 slug: slug,
                 repoData: sc.repo,
