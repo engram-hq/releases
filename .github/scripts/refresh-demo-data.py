@@ -85,6 +85,16 @@ def main():
         print("ERROR: No data fetched", file=sys.stderr)
         sys.exit(1)
 
+    # Safety: never overwrite with fewer skills (token may lack cross-org scope)
+    if os.path.exists("demo-data.json"):
+        with open("demo-data.json") as f:
+            existing = json.load(f)
+        old_skills = len(existing.get("skills", []))
+        if len(data["skills"]) < old_skills:
+            print(f"ABORT: Would downgrade from {old_skills} to {len(data['skills'])} skills.")
+            print("Token likely lacks cross-org scope. Keeping existing data.", file=sys.stderr)
+            sys.exit(0)
+
     with open("demo-data.json", "w") as out:
         json.dump(data, out, indent=2)
     print("Wrote demo-data.json")
