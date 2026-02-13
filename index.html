@@ -1250,6 +1250,7 @@
             <ul class="nav-links">
                 <li><a href="#demo">Live Demo</a></li>
                 <li><a href="#features">Features</a></li>
+                <li><a href="#cli">CLI</a></li>
                 <li><a href="#architecture">Architecture</a></li>
                 <li><a href="#sdk">SDK</a></li>
                 <li><a href="https://github.com/engram-hq" target="_blank">GitHub</a></li>
@@ -1260,12 +1261,13 @@
 
     <section class="hero">
         <div class="container">
-            <div class="hero-badge"><span>Open Source</span> &middot; Next.js + Swift</div>
+            <div class="hero-badge"><span>v2.0.0</span> &middot; Now with Local AI &middot; Zero API Cost</div>
             <h1>See what your <span class="gradient">AI agents</span> have learned</h1>
-            <p>Visual browser for AI agent skills and memories. Track costs, explore knowledge hierarchies, and understand how your agents work across GitHub repos.</p>
+            <p>Visual browser for AI agent skills and memories. Now with a built-in local AI model - analyze any codebase, generate skills and memories, fully air-gapped. No API keys. No tokens. No cost.</p>
             <div class="hero-buttons">
                 <a href="#demo" class="btn-primary">Try Live Demo</a>
-                <a href="https://github.com/engram-hq/engram-web" class="btn-secondary">View on GitHub</a>
+                <a href="#cli" class="btn-secondary">Install CLI</a>
+                <a href="https://github.com/engram-hq/engram-cli" class="btn-secondary">View on GitHub</a>
             </div>
         </div>
     </section>
@@ -1274,20 +1276,20 @@
         <div class="container">
             <div class="stats-grid">
                 <div>
-                    <div class="stat-value">15</div>
-                    <div class="stat-label">REST API Endpoints</div>
+                    <div class="stat-value">$0</div>
+                    <div class="stat-label">AI API Cost</div>
                 </div>
                 <div>
-                    <div class="stat-value">9</div>
-                    <div class="stat-label">Dashboard Pages</div>
+                    <div class="stat-value">7B</div>
+                    <div class="stat-label">Embedded Model</div>
                 </div>
                 <div>
-                    <div class="stat-value">142</div>
+                    <div class="stat-value">257</div>
                     <div class="stat-label">Tests Passing</div>
                 </div>
                 <div>
-                    <div class="stat-value">3</div>
-                    <div class="stat-label">Tier Skill System</div>
+                    <div class="stat-value">~40s</div>
+                    <div class="stat-label">Per Repo Analysis</div>
                 </div>
             </div>
         </div>
@@ -1296,16 +1298,20 @@
     <section class="demo" id="demo">
         <div class="container">
             <h2>Live Demo</h2>
-            <p class="subtitle">Real skills and memories fetched live from public GitHub repos. No mock data.</p>
-            <p class="demo-source">Browsing public repos from <code id="demo-org-label">engram-hq</code>, <code>sreniatnoc</code>, and <code>ARTIFACTIQ</code></p>
+            <p class="subtitle">Real skills and memories from public repos. Internal repos analyzed by the embedded AI model. All generated locally at $0 cost.</p>
+            <p class="demo-source">Browsing repos from <code id="demo-org-label">engram-hq</code>, <code>sreniatnoc</code>, <code>ARTIFACTIQ</code>, and famous open-source projects</p>
 
             <div class="explore-bar">
                 <div class="explore-chips" id="explore-chips">
-                    <span class="explore-chips-label">Explore AI-analyzed repos:</span>
+                    <span class="explore-chips-label">AI-analyzed repos (click to load):</span>
+                    <button class="explore-chip showcase-chip" onclick="loadShowcase('sreniatnoc/rusd')">sreniatnoc/rusd</button>
+                    <button class="explore-chip showcase-chip" onclick="loadShowcase('engram-hq/engram-web')">engram-hq/engram-web</button>
+                    <button class="explore-chip showcase-chip" onclick="loadShowcase('engram-hq/engram-sdk')">engram-hq/engram-sdk</button>
+                    <button class="explore-chip showcase-chip" onclick="loadShowcase('fastapi/fastapi')">fastapi/fastapi</button>
+                    <button class="explore-chip showcase-chip" onclick="loadShowcase('pallets/flask')">pallets/flask</button>
+                    <button class="explore-chip showcase-chip" onclick="loadShowcase('astral-sh/ruff')">astral-sh/ruff</button>
                     <button class="explore-chip showcase-chip" onclick="loadShowcase('facebook/react')">facebook/react</button>
                     <button class="explore-chip showcase-chip" onclick="loadShowcase('denoland/deno')">denoland/deno</button>
-                    <button class="explore-chip showcase-chip" onclick="loadShowcase('astral-sh/ruff')">astral-sh/ruff</button>
-                    <button class="explore-chip showcase-chip" onclick="loadShowcase('pallets/flask')">pallets/flask</button>
                 </div>
                 <div class="explore-status" id="explore-status"></div>
             </div>
@@ -1480,6 +1486,86 @@
         </div>
     </section>
 
+    <section class="code-section" id="cli">
+        <div class="container">
+            <h2 style="display:flex;align-items:center;justify-content:center;gap:0.75rem;">Engram CLI <span style="background:linear-gradient(135deg,var(--primary),var(--accent));color:white;font-size:0.7rem;padding:0.25rem 0.7rem;border-radius:999px;font-weight:600;">v2.0.0 NEW</span></h2>
+            <p class="subtitle">Analyze any codebase with a local AI model. No API keys. No tokens. No cloud. One command.</p>
+
+            <div class="code-block">
+<pre><span class="comment"># Install (one-time setup)</span>
+<span class="func">brew</span> install ollama              <span class="comment"># macOS</span>
+<span class="func">pip</span> install engram-cli            <span class="comment"># or: pip3 install engram-cli</span>
+
+<span class="comment"># Analyze any local repo</span>
+<span class="func">engram</span> analyze .
+
+<span class="comment"># Analyze a GitHub repo by URL</span>
+<span class="func">engram</span> analyze https://github.com/fastapi/fastapi
+
+<span class="comment"># Or shorthand</span>
+<span class="func">engram</span> analyze pallets/flask --org pallets</pre>
+            </div>
+
+            <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:1.5rem;">
+                First run downloads Qwen2.5-Coder 7B (~4.5GB, one-time). Runs on 8GB RAM.<br>
+                Upgrade models anytime: <code style="background:var(--code-bg);padding:2px 6px;border-radius:4px;">engram analyze . --model qwen2.5-coder:14b</code>
+            </p>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2.5rem;">
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
+                    <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#127968;</div>
+                    <h4 style="margin-bottom:0.5rem;">Fully Local</h4>
+                    <p style="font-size:0.85rem;color:var(--text-muted);">Your code never leaves your machine. No API calls, no telemetry, no cloud dependency.</p>
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
+                    <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#128176;</div>
+                    <h4 style="margin-bottom:0.5rem;">Zero Cost</h4>
+                    <p style="font-size:0.85rem;color:var(--text-muted);">No API tokens burned. Analyze unlimited repos. Perfect for researchers and students.</p>
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
+                    <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#129504;</div>
+                    <h4 style="margin-bottom:0.5rem;">Real AI Insights</h4>
+                    <p style="font-size:0.85rem;color:var(--text-muted);">Qwen2.5-Coder 7B understands code deeply. Not just file counting - real architectural analysis.</p>
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
+                    <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#128268;</div>
+                    <h4 style="margin-bottom:0.5rem;">Pluggable</h4>
+                    <p style="font-size:0.85rem;color:var(--text-muted);">Enterprise users can swap in Claude or GPT APIs for higher quality. Local model is the default.</p>
+                </div>
+            </div>
+
+            <div style="margin-top:2.5rem;">
+                <h3 style="text-align:center;margin-bottom:1.5rem;">What You Get</h3>
+                <div class="code-block">
+<pre><span class="func">$</span> engram analyze fastapi/fastapi
+
+<span class="comment">╭────────────────────────────────────────╮</span>
+<span class="comment">│ Engram v2.0.0 - Local AI Code Analyzer │</span>
+<span class="comment">╰────────────────────────────────────────╯</span>
+
+<span class="keyword">Phase 1:</span> Heuristic Analysis
+  Languages: Python (89%), Markdown (6%), Shell (3%)
+  Frameworks: FastAPI, Starlette, Pydantic, Uvicorn, pytest
+  Testing: pytest (142 test files)
+  CI/CD: GitHub Actions (5 workflows)
+  Patterns: REST API, Middleware, Documentation site
+
+<span class="keyword">Phase 2:</span> Local Model Inference (qwen2.5-coder:7b)
+  [1/5] Generating architecture skill...
+  [2/5] Generating patterns skill...
+  [3/5] Generating testing skill...
+  [4/5] Generating project overview...
+  [5/5] Generating activity analysis...
+
+<span class="string">╭───────── Results for fastapi/fastapi ──────────╮</span>
+<span class="string">│ Generated 3 skills + 2 memories               │</span>
+<span class="string">│ Model: qwen2.5-coder:7b | Time: 42s | Cost: $0│</span>
+<span class="string">╰────────────────────────────────────────────────╯</span></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="code-section" id="sdk">
         <div class="container">
             <h2>Agent Metrics SDK</h2>
@@ -1509,32 +1595,38 @@ engram.<span class="func">track</span>({
 
     <section class="code-section" id="try-locally">
         <div class="container">
-            <h2>Try Locally in 30 Seconds</h2>
-            <p class="subtitle">No account needed. Just Docker. Clone, run, and start browsing your agent skills and memories.</p>
-            <div class="code-block">
-<pre><span class="comment"># Clone and start Engram locally</span>
-<span class="func">git</span> clone https://github.com/engram-hq/engram-web.git
-<span class="func">cd</span> engram-web
+            <h2>Get Started</h2>
+            <p class="subtitle">Two ways to run Engram - pick what fits your workflow.</p>
 
-<span class="comment"># One command - builds and starts on localhost:3000</span>
-<span class="func">docker</span> compose -f docker-compose.local.yml up --build
-
-<span class="comment"># Open http://localhost:3000 and start exploring!</span></pre>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;">
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;">
+                    <h3 style="color:var(--accent);margin-bottom:1rem;">Option A: CLI (Recommended)</h3>
+                    <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">Analyze any repo from your terminal. No server needed.</p>
+                    <div class="code-block" style="margin:0;">
+<pre><span class="func">pip</span> install engram-cli
+<span class="func">engram</span> analyze .</pre>
+                    </div>
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;">
+                    <h3 style="color:var(--primary-light);margin-bottom:1rem;">Option B: Web Dashboard</h3>
+                    <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">Full web UI with search, timeline, analytics. Docker one-liner.</p>
+                    <div class="code-block" style="margin:0;">
+<pre><span class="func">git</span> clone https://github.com/engram-hq/engram-web.git
+<span class="func">docker</span> compose -f docker-compose.local.yml up --build</pre>
+                    </div>
+                </div>
             </div>
-            <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 1.5rem;">
-                Uses local SQLite (no cloud DB needed). Data persists in a Docker volume.<br>
-                For production with GitHub OAuth and HTTPS, see <a href="https://github.com/engram-hq/engram-web/blob/main/DEPLOY.md" style="color: var(--primary-light);">DEPLOY.md</a>.
-            </p>
         </div>
     </section>
 
     <section class="cta">
         <div class="container">
-            <h2>Start understanding your AI agents</h2>
-            <p>Engram is open source. Run locally with Docker, self-host on your VM, or wait for the hosted version with subscriptions.</p>
+            <h2>Analyze any codebase. Zero cost. Fully local.</h2>
+            <p>Engram is open source. The CLI runs entirely on your machine with a built-in AI model. No API keys, no cloud, no cost. Perfect for researchers, educators, and teams who care about privacy.</p>
             <div class="hero-buttons">
-                <a href="#try-locally" class="btn-primary">Try Locally</a>
-                <a href="https://github.com/engram-hq/engram-web" class="btn-secondary">View on GitHub</a>
+                <a href="#cli" class="btn-primary">Install CLI</a>
+                <a href="#try-locally" class="btn-secondary">Other Options</a>
+                <a href="https://github.com/engram-hq/engram-cli" class="btn-secondary">GitHub</a>
             </div>
         </div>
     </section>
@@ -1543,6 +1635,7 @@ engram.<span class="func">track</span>({
         <div class="container">
             <div class="footer-links">
                 <a href="https://github.com/engram-hq">GitHub</a>
+                <a href="https://github.com/engram-hq/engram-cli">CLI Tool</a>
                 <a href="https://github.com/engram-hq/engram-web">Web App</a>
                 <a href="https://github.com/engram-hq/engram-sdk">SDK</a>
                 <a href="https://github.com/engram-hq/roadmap">Roadmap</a>
@@ -2724,6 +2817,10 @@ engram.<span class="func">track</span>({
         'denoland/deno': '#34d399',
         'astral-sh/ruff': '#fb923c',
         'pallets/flask': '#f472b6',
+        'sreniatnoc/rusd': '#f59e0b',
+        'engram-hq/engram-web': '#a78bfa',
+        'engram-hq/engram-sdk': '#818cf8',
+        'fastapi/fastapi': '#009485',
     };
 
     function setExploreStatus(msg, isError) {
