@@ -1650,7 +1650,7 @@ engram.<span class="func">track</span>({
     // Load showcase data (pre-analyzed famous repos)
     fetch('showcase-data.json').then(r => r.ok ? r.json() : null).then(d => { window.SHOWCASE_DATA = d; }).catch(() => {});
     </script>
-    <script src="https://unpkg.com/three@0.170.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
     <script src="https://unpkg.com/3d-force-graph"></script>
     <script>
     // ==========================================
@@ -2296,7 +2296,7 @@ engram.<span class="func">track</span>({
                     scene.add(pt);
                 }
             }
-        } catch(e) { /* custom shapes not available, default spheres still work */ }
+        } catch(e) { console.warn('[Engram] Custom THREE.js shapes failed:', e); }
 
         // Scene fog for depth
         try {
