@@ -1498,6 +1498,7 @@ engram.<span class="func">track</span>({
         </div>
     </footer>
     <script src="demo-data.js"></script>
+    <script src="https://unpkg.com/three@0.170.0/build/three.min.js"></script>
     <script src="https://unpkg.com/3d-force-graph"></script>
     <script>
     // ==========================================
@@ -1856,62 +1857,80 @@ engram.<span class="func">track</span>({
         const orgKeys = Object.keys(_tlOrgTree);
         const nodes = [];
         const links = [];
+        const maxCost = Math.max(...memories.map(m => m.cost || 0), 1);
 
-        // Session nodes
+        // Session nodes - size = cost intensity
         for (const m of memories) {
             const dateIdx = uniqueDates.indexOf(m.date);
             const orgIdx = orgKeys.indexOf(m.org);
+            const costRatio = m.cost ? m.cost / maxCost : 0;
             nodes.push({
                 id: m.id, nodeType: 'session', name: m.title, org: m.org,
                 date: m.date, cost: m.cost, model: m.model, words: m.words,
                 inputTokens: m.inputTokens, outputTokens: m.outputTokens, apiCalls: m.apiCalls,
-                val: m.cost ? Math.max(4, Math.sqrt(m.cost) * 1.8) : Math.max(3, m.words / 400),
+                val: m.cost ? Math.max(6, Math.sqrt(m.cost) * 2.2) : Math.max(4, m.words / 300),
                 color: ORG_COLORS[m.org] || DEFAULT_NODE_COLOR,
-                x: (dateIdx / Math.max(uniqueDates.length - 1, 1) - 0.5) * 250,
-                y: (orgIdx - orgKeys.length / 2) * 70,
-                z: (Math.random() - 0.5) * 80,
+                costRatio: costRatio,
+                x: (dateIdx / Math.max(uniqueDates.length - 1, 1) - 0.5) * 280,
+                y: (orgIdx - orgKeys.length / 2) * 80,
+                z: (Math.random() - 0.5) * 100,
                 memData: m,
             });
         }
 
-        // Skill nodes (smaller, dimmer)
+        // Skill nodes - smaller, ring-like
         for (const s of skills) {
             const orgIdx = orgKeys.indexOf(s.org);
-            const baseColor = ORG_COLORS[s.org] || DEFAULT_NODE_COLOR;
             nodes.push({
                 id: s.id, nodeType: 'skill', name: s.name, org: s.org,
-                words: s.words, val: Math.max(1.5, s.words / 800),
-                color: baseColor + '99',
-                x: (Math.random() - 0.5) * 180,
-                y: (orgIdx - orgKeys.length / 2) * 70 + (Math.random() - 0.5) * 40,
-                z: (Math.random() - 0.5) * 80,
+                words: s.words, val: Math.max(2, s.words / 600),
+                color: ORG_COLORS[s.org] || DEFAULT_NODE_COLOR,
+                costRatio: 0,
+                x: (Math.random() - 0.5) * 200,
+                y: (orgIdx - orgKeys.length / 2) * 80 + (Math.random() - 0.5) * 50,
+                z: (Math.random() - 0.5) * 100,
                 skillData: s,
             });
         }
 
-        // Links: chronological within same org
+        // Links: session-to-session chronological (strong neural pathways)
         const byOrg = {};
         for (const m of memories) {
             if (!byOrg[m.org]) byOrg[m.org] = [];
             byOrg[m.org].push(m);
         }
         for (const [org, orgMems] of Object.entries(byOrg)) {
+            const c = ORG_COLORS[org] || DEFAULT_NODE_COLOR;
             orgMems.sort((a, b) => a.date.localeCompare(b.date));
             for (let i = 0; i < orgMems.length - 1; i++) {
                 links.push({
                     source: orgMems[i].id, target: orgMems[i + 1].id,
-                    color: (ORG_COLORS[org] || DEFAULT_NODE_COLOR) + 'aa',
+                    dimColor: c + '12', particleColor: c,
+                    particles: 8, particleWidth: 3.2, speed: 0.012,
+                    width: 1.8, linkType: 'synapse',
                 });
             }
         }
 
-        // Links: skills to most recent session in same org (faint)
+        // Links: skill-to-session (knowledge dendrites - thinner, slower)
         for (const s of skills) {
             const orgSessions = byOrg[s.org] || [];
+            const c = ORG_COLORS[s.org] || DEFAULT_NODE_COLOR;
             if (orgSessions.length > 0) {
                 links.push({
                     source: s.id, target: orgSessions[orgSessions.length - 1].id,
-                    color: (ORG_COLORS[s.org] || DEFAULT_NODE_COLOR) + '33',
+                    dimColor: c + '08', particleColor: c + 'bb',
+                    particles: 3, particleWidth: 1.8, speed: 0.005,
+                    width: 0.6, linkType: 'dendrite',
+                });
+            }
+            // Cross-link skills in same org to first session too
+            if (orgSessions.length > 1) {
+                links.push({
+                    source: s.id, target: orgSessions[0].id,
+                    dimColor: c + '06', particleColor: c + '88',
+                    particles: 2, particleWidth: 1.2, speed: 0.004,
+                    width: 0.3, linkType: 'dendrite',
                 });
             }
         }
@@ -1922,79 +1941,148 @@ engram.<span class="func">track</span>({
 
         const graph = ForceGraph3D()(container)
             .graphData({ nodes, links })
-            .backgroundColor('#050508')
+            .backgroundColor('#020205')
             .width(container.clientWidth)
             .height(container.clientHeight)
+
+            // Nodes
+            .nodeRelSize(7)
+            .nodeVal(n => n.val)
+            .nodeColor(n => n.color)
+            .nodeOpacity(0.95)
+            .nodeResolution(24)
             .nodeLabel(node => {
                 const icon = node.nodeType === 'skill' ? '&#9889;' : '&#128218;';
-                let html = '<div style="background:rgba(9,9,11,0.95);padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);color:#fafafa;font-size:13px;max-width:260px;font-family:-apple-system,sans-serif;">';
-                html += '<div style="font-weight:600;margin-bottom:3px;">' + icon + ' ' + node.name + '</div>';
+                const bg = node.nodeType === 'session' ? 'rgba(9,9,11,0.96)' : 'rgba(9,9,11,0.92)';
+                let html = '<div style="background:' + bg + ';padding:10px 14px;border-radius:10px;border:1px solid ' + node.color + '44;color:#fafafa;font-size:13px;max-width:280px;font-family:-apple-system,sans-serif;box-shadow:0 0 20px ' + node.color + '22;">';
+                html += '<div style="font-weight:700;margin-bottom:4px;color:' + node.color + ';">' + icon + ' ' + node.name + '</div>';
                 if (node.nodeType === 'session') {
-                    html += '<div style="color:#a1a1aa;font-size:11px;">' + node.date + ' &middot; ' + node.org + '</div>';
-                    if (node.model) html += '<div style="color:#a1a1aa;font-size:11px;">Model: ' + node.model.replace('claude-', '') + '</div>';
-                    if (node.cost !== null) html += '<div style="color:#a78bfa;font-size:11px;font-weight:600;">Cost: $' + node.cost.toFixed(2) + '</div>';
-                    if (node.inputTokens) html += '<div style="color:#a1a1aa;font-size:11px;">Tokens: ' + (node.inputTokens / 1000).toFixed(0) + 'K in / ' + (node.outputTokens / 1000).toFixed(0) + 'K out</div>';
-                    if (node.apiCalls) html += '<div style="color:#a1a1aa;font-size:11px;">API calls: ' + node.apiCalls + '</div>';
+                    html += '<div style="color:#a1a1aa;font-size:11px;margin-bottom:2px;">' + node.date + ' &middot; ' + node.org + '</div>';
+                    if (node.cost !== null) {
+                        const barWidth = Math.round(node.costRatio * 100);
+                        html += '<div style="margin:5px 0;"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;"><span style="color:#a1a1aa;">Cost</span><span style="color:' + node.color + ';font-weight:700;">$' + node.cost.toFixed(2) + '</span></div>';
+                        html += '<div style="background:rgba(255,255,255,0.06);border-radius:3px;height:4px;overflow:hidden;"><div style="width:' + barWidth + '%;height:100%;background:' + node.color + ';border-radius:3px;"></div></div></div>';
+                    }
+                    if (node.model) html += '<div style="color:#71717a;font-size:10px;">Model: ' + node.model.replace('claude-', '') + '</div>';
+                    if (node.inputTokens) html += '<div style="color:#71717a;font-size:10px;">Tokens: ' + (node.inputTokens / 1000).toFixed(0) + 'K in &middot; ' + (node.outputTokens / 1000).toFixed(0) + 'K out</div>';
+                    if (node.apiCalls) html += '<div style="color:#71717a;font-size:10px;">' + node.apiCalls + ' API calls &middot; ' + node.words.toLocaleString() + ' words</div>';
+                    else html += '<div style="color:#71717a;font-size:10px;">' + node.words.toLocaleString() + ' words</div>';
                 } else {
-                    html += '<div style="color:#a1a1aa;font-size:11px;">' + node.org + ' &middot; Skill</div>';
+                    html += '<div style="color:#a1a1aa;font-size:11px;">' + node.org + ' &middot; Tier ' + (node.skillData ? node.skillData.tier : '2') + ' Skill</div>';
+                    html += '<div style="color:#71717a;font-size:10px;">' + node.words.toLocaleString() + ' words</div>';
                 }
-                html += '<div style="color:#a1a1aa;font-size:11px;">' + node.words.toLocaleString() + ' words</div>';
                 html += '</div>';
                 return html;
             })
-            .nodeColor(n => n.color)
-            .nodeOpacity(0.92)
-            .nodeResolution(16)
-            .linkColor(l => l.color || 'rgba(255,255,255,0.08)')
-            .linkWidth(0.8)
-            .linkDirectionalArrowLength(3.5)
-            .linkDirectionalArrowRelPos(1)
-            .linkDirectionalParticles(2)
-            .linkDirectionalParticleWidth(1.2)
-            .linkDirectionalParticleSpeed(0.006)
-            .linkDirectionalParticleColor(l => {
-                const base = l.color || 'rgba(255,255,255,0.3)';
-                return base.length === 9 ? base.slice(0, 7) : base;
-            })
+
+            // Links - dim pathways with bright flowing particles
+            .linkCurvature(l => l.linkType === 'synapse' ? 0.2 : 0.35)
+            .linkWidth(l => l.width)
+            .linkOpacity(0.06)
+            .linkColor(l => l.dimColor)
+
+            // Particles - neural signals flowing through synapses
+            .linkDirectionalParticles(l => l.particles)
+            .linkDirectionalParticleWidth(l => l.particleWidth)
+            .linkDirectionalParticleSpeed(l => l.speed)
+            .linkDirectionalParticleColor(l => l.particleColor)
+            .linkDirectionalParticleResolution(12)
+
+            // No arrows - particles show direction
+            .linkDirectionalArrowLength(0)
+
             .onNodeClick(node => {
                 if (node.nodeType === 'session' && node.memData) {
                     loadMemory(node.memData);
                 } else if (node.nodeType === 'skill' && node.skillData) {
                     loadSkillInDetail(node.skillData);
                 }
-                // Fly camera to clicked node
-                const dist = 150;
+                const dist = 120;
                 const ratio = 1 + dist / Math.hypot(node.x, node.y, node.z);
                 graph.cameraPosition(
                     { x: node.x * ratio, y: node.y * ratio, z: node.z * ratio },
-                    node, 1000
+                    node, 1200
                 );
             })
             .onNodeHover(node => {
                 container.style.cursor = node ? 'pointer' : 'default';
             })
-            .warmupTicks(80)
-            .cooldownTicks(200);
+            .warmupTicks(120)
+            .cooldownTicks(300)
+            .d3AlphaDecay(0.015)
+            .d3VelocityDecay(0.3);
 
-        // Slow auto-rotate
+        // Custom node rendering with glow halos
+        try {
+            const THREE = window.THREE || graph.scene().constructor;
+            if (THREE && THREE.SpriteMaterial) {
+                const glowTextures = {};
+                function getGlowTexture(color) {
+                    if (glowTextures[color]) return glowTextures[color];
+                    const c = document.createElement('canvas');
+                    c.width = 64; c.height = 64;
+                    const ctx = c.getContext('2d');
+                    const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+                    g.addColorStop(0, color + 'cc');
+                    g.addColorStop(0.15, color + '66');
+                    g.addColorStop(0.4, color + '22');
+                    g.addColorStop(1, 'transparent');
+                    ctx.fillStyle = g;
+                    ctx.fillRect(0, 0, 64, 64);
+                    const tex = new THREE.CanvasTexture(c);
+                    glowTextures[color] = tex;
+                    return tex;
+                }
+
+                graph.nodeThreeObjectExtend(true)
+                    .nodeThreeObject(node => {
+                        const size = (node.val || 3) * (node.nodeType === 'session' ? 5 : 3);
+                        const sprite = new THREE.Sprite(
+                            new THREE.SpriteMaterial({
+                                map: getGlowTexture(node.color),
+                                transparent: true,
+                                opacity: node.nodeType === 'session' ? 0.5 : 0.25,
+                                depthWrite: false,
+                            })
+                        );
+                        sprite.scale.set(size, size, 1);
+                        return sprite;
+                    });
+            }
+        } catch(e) { /* glow not available, default spheres still look good */ }
+
+        // Scene fog for depth
+        try {
+            const scene = graph.scene();
+            if (scene && scene.fog === null) {
+                if (window.THREE) scene.fog = new THREE.FogExp2('#020205', 0.0015);
+            }
+        } catch(e) {}
+
+        // Camera & controls
         const controls = graph.controls();
         controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.4;
+        controls.autoRotateSpeed = 0.3;
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.12;
 
-        // Set initial camera
         setTimeout(() => {
-            graph.cameraPosition({ x: 0, y: 80, z: 300 }, { x: 0, y: 0, z: 0 }, 0);
+            graph.cameraPosition({ x: 50, y: 100, z: 350 }, { x: 0, y: 0, z: 0 }, 0);
         }, 100);
 
-        // Add legend overlay
+        // Legend overlay with metric explanations
         const legend = document.createElement('div');
         legend.className = 'tl-legend';
-        let legendHtml = '';
+        let legendHtml = '<div style="display:flex;flex-direction:column;gap:6px;">';
+        legendHtml += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
         for (const [org, color] of Object.entries(ORG_COLORS)) {
             if (_tlOrgTree[org]) {
-                legendHtml += '<div class="tl-legend-item"><span class="tl-legend-dot" style="background:' + color + ';"></span>' + org + '</div>';
+                legendHtml += '<div class="tl-legend-item"><span class="tl-legend-dot" style="background:' + color + ';box-shadow:0 0 6px ' + color + ';"></span>' + org + '</div>';
             }
         }
+        legendHtml += '</div>';
+        legendHtml += '<div style="font-size:0.62rem;color:rgba(255,255,255,0.35);border-top:1px solid rgba(255,255,255,0.06);padding-top:4px;">Node size = session cost &middot; Flowing particles = data flow between sessions &middot; Brighter glow = higher cost</div>';
+        legendHtml += '</div>';
         legend.innerHTML = legendHtml;
         container.appendChild(legend);
 
