@@ -746,13 +746,45 @@
         .demo-tab-panel { display: none; }
         .demo-tab-panel.active { display: block; }
 
-        /* 3D Timeline Graph */
+        /* 3D Timeline Graph - fullscreen overlay */
+        #panel-timeline.active {
+            display: block;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: var(--bg-dark);
+            padding: 0;
+        }
+        .tl-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 1rem;
+            background: rgba(9,9,11,0.95);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            height: 44px;
+            flex-shrink: 0;
+        }
+        .tl-topbar-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .tl-topbar-right { display: flex; align-items: center; gap: 0.75rem; }
+        .tl-close-btn {
+            background: none; border: 1px solid var(--border); color: var(--text-muted);
+            padding: 0.25rem 0.75rem; border-radius: 6px; cursor: pointer;
+            font-size: 0.78rem; transition: all 0.15s;
+        }
+        .tl-close-btn:hover { color: var(--text); border-color: var(--text-muted); }
         .timeline-3panel {
             display: grid;
             grid-template-columns: 200px 1fr 340px;
-            height: 720px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            height: calc(100vh - 44px);
             overflow: hidden;
             background: var(--bg-dark);
         }
@@ -847,10 +879,10 @@
         }
         .tl-placeholder .icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.5; }
         @media (max-width: 900px) {
-            .timeline-3panel { grid-template-columns: 1fr; height: auto; }
-            .tl-left { border-right: none; border-bottom: 1px solid var(--border); max-height: 150px; }
-            .tl-graph { height: 400px; }
-            .tl-right { border-left: none; border-top: 1px solid var(--border); }
+            .timeline-3panel { grid-template-columns: 1fr; height: calc(100vh - 44px); grid-template-rows: auto 1fr auto; }
+            .tl-left { border-right: none; border-bottom: 1px solid var(--border); max-height: 120px; }
+            .tl-graph { min-height: 300px; }
+            .tl-right { border-left: none; border-top: 1px solid var(--border); max-height: 250px; }
         }
 
         .tier-badge-sm.t2 { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
@@ -1253,6 +1285,13 @@
             </div>
 
             <div class="demo-tab-panel" id="panel-timeline">
+                <div class="tl-topbar">
+                    <span class="tl-topbar-title">Engram Knowledge Graph</span>
+                    <div class="tl-topbar-right">
+                        <span style="font-size:0.7rem;color:var(--text-muted);">Drag to rotate &middot; Scroll to zoom &middot; Click nodes for details</span>
+                        <button class="tl-close-btn" onclick="closeTimeline()">Esc &times;</button>
+                    </div>
+                </div>
                 <div class="timeline-3panel">
                     <div class="tl-left" id="tl-left-panel">
                         <h4>Organizations</h4>
@@ -1272,7 +1311,7 @@
                             <div class="spinner"></div>
                             <span>Building knowledge graph...</span>
                         </div>
-                        <div class="tl-hint">Drag to rotate &middot; Scroll to zoom</div>
+                        <div class="tl-hint"></div>
                     </div>
                     <div class="tl-right" id="tl-detail-panel">
                         <div class="tl-placeholder">
@@ -1697,6 +1736,13 @@ engram.<span class="func">track</span>({
         document.querySelector('.demo-tab[data-tab="' + tab + '"]').classList.add('active');
         document.getElementById('panel-' + tab).classList.add('active');
 
+        // Timeline is fullscreen overlay - lock body scroll
+        if (tab === 'timeline') {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+
         if (!tabLoaded[tab]) {
             tabLoaded[tab] = true;
             if (tab === 'timeline') initTimelineGraph();
@@ -1704,7 +1750,31 @@ engram.<span class="func">track</span>({
             else if (tab === 'analytics') initAnalytics();
             else if (tab === 'sync') initSync();
         }
+
+        // Resize graph when re-entering timeline
+        if (tab === 'timeline' && window._tlGraph) {
+            const c = document.getElementById('tl-graph-container');
+            setTimeout(() => {
+                window._tlGraph.width(c.clientWidth);
+                window._tlGraph.height(c.clientHeight);
+            }, 50);
+        }
     }
+
+    function closeTimeline() {
+        // Return to skills tab
+        switchDemoTab('skills');
+        document.body.style.overflow = '';
+        // Scroll back to demo section
+        document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Esc key closes fullscreen timeline
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('panel-timeline').classList.contains('active')) {
+            closeTimeline();
+        }
+    });
 
     // ==========================================
     // 3D Timeline Graph
