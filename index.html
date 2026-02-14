@@ -1907,20 +1907,13 @@ engram.<span class="func">track</span>({
 
         if (!tabLoaded[tab]) {
             tabLoaded[tab] = true;
-            if (tab === 'timeline') initTimelineGraph();
-            else if (tab === 'search') initSearch();
+            if (tab === 'search') initSearch();
             else if (tab === 'analytics') initAnalytics();
             else if (tab === 'sync') initSync();
         }
 
-        // Resize graph when re-entering timeline
-        if (tab === 'timeline' && window._tlGraph) {
-            const c = document.getElementById('tl-graph-container');
-            setTimeout(() => {
-                window._tlGraph.width(c.clientWidth);
-                window._tlGraph.height(c.clientHeight);
-            }, 50);
-        }
+        // Timeline: always re-init (WebGL context breaks when container is display:none)
+        if (tab === 'timeline') initTimelineGraph();
     }
 
     function closeTimeline() {
