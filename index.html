@@ -2376,7 +2376,8 @@ engram.<span class="func">track</span>({
 
     function filterGraph(org) {
         if (!window._tlGraph) return;
-        window._tlGraph
+        const graph = window._tlGraph;
+        graph
             .nodeVisibility(n => !org || n.org === org)
             .linkVisibility(l => {
                 if (!org) return true;
@@ -2385,6 +2386,32 @@ engram.<span class="func">track</span>({
                 return src && tgt && src.org === org && tgt.org === org;
             });
         renderOrgTree(org);
+
+        // Fly camera to org cluster centroid (or reset to overview)
+        const gdata = graph.graphData();
+        const targets = org ? gdata.nodes.filter(n => n.org === org) : gdata.nodes;
+        if (!targets.length) return;
+        const cx = targets.reduce((s, n) => s + (n.x || 0), 0) / targets.length;
+        const cy = targets.reduce((s, n) => s + (n.y || 0), 0) / targets.length;
+        const cz = targets.reduce((s, n) => s + (n.z || 0), 0) / targets.length;
+        // Distance based on cluster spread (or wide for "All")
+        const spread = Math.max(
+            ...targets.map(n => Math.hypot((n.x||0) - cx, (n.y||0) - cy, (n.z||0) - cz)),
+            30
+        );
+        const dist = org ? spread * 2.5 : spread * 1.8;
+        const hyp = Math.hypot(cx, cy, cz);
+        let camPos;
+        if (hyp < 1) {
+            camPos = { x: 0, y: 0, z: dist };
+        } else {
+            const ratio = 1 + dist / hyp;
+            camPos = { x: cx * ratio, y: cy * ratio, z: cz * ratio };
+        }
+        const controls = graph.controls();
+        if (controls) controls.autoRotate = false;
+        graph.cameraPosition(camPos, { x: cx, y: cy, z: cz }, 800);
+        setTimeout(() => { if (controls) controls.autoRotate = true; }, 1200);
     }
 
     // Fly camera to a node - pauses auto-rotate to prevent fighting
