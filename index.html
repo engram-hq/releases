@@ -1537,7 +1537,7 @@
             <div class="code-block">
 <pre><span class="comment"># Install (one-time setup)</span>
 <span class="func">brew</span> install ollama              <span class="comment"># macOS</span>
-<span class="func">pip</span> install engram-cli            <span class="comment"># or: pip3 install engram-cli</span>
+<span class="func">pipx</span> install engram-cli           <span class="comment"># or: pip install engram-cli</span>
 
 <span class="comment"># Analyze any local repo</span>
 <span class="func">engram</span> analyze .
@@ -1551,7 +1551,8 @@
 
             <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:1.5rem;">
                 First run downloads Qwen2.5-Coder 7B (~4.5GB, one-time). Runs on 8GB RAM.<br>
-                Upgrade models anytime: <code style="background:var(--code-bg);padding:2px 6px;border-radius:4px;">engram analyze . --model qwen2.5-coder:14b</code>
+                Upgrade models anytime: <code style="background:var(--code-bg);padding:2px 6px;border-radius:4px;">engram analyze . --model qwen2.5-coder:14b</code><br>
+                macOS: install pipx first with <code style="background:var(--code-bg);padding:2px 6px;border-radius:4px;">brew install pipx</code> &middot; Linux: <code style="background:var(--code-bg);padding:2px 6px;border-radius:4px;">pip install engram-cli</code> also works
             </p>
 
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2.5rem;">
@@ -1646,7 +1647,7 @@ engram.<span class="func">track</span>({
                     <h3 style="color:var(--accent);margin-bottom:1rem;">Option A: CLI (Recommended)</h3>
                     <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">Analyze any repo from your terminal. No server needed.</p>
                     <div class="code-block" style="margin:0;">
-<pre><span class="func">pip</span> install engram-cli
+<pre><span class="func">pipx</span> install engram-cli
 <span class="func">engram</span> analyze .</pre>
                     </div>
                 </div>
