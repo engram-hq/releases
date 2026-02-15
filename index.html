@@ -909,6 +909,20 @@
             height: 100%; text-align: center; color: var(--text-muted); font-size: 0.85rem;
         }
         .tl-placeholder .icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.5; }
+
+        /* Org cloud tooltip */
+        .cloud-tooltip {
+            position: fixed; pointer-events: none; z-index: 100;
+            background: rgba(9,9,11,0.95); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px; padding: 10px 14px; font-size: 13px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #fafafa; box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+            max-width: 240px; display: none;
+        }
+        .cloud-tooltip .ct-org { font-weight: 700; margin-bottom: 4px; }
+        .cloud-tooltip .ct-row { font-size: 11px; color: #a1a1aa; line-height: 1.6; }
+        .cloud-tooltip .ct-hint { font-size: 10px; color: #71717a; margin-top: 4px; }
+
         @media (max-width: 900px) {
             .timeline-3panel { grid-template-columns: 1fr; height: calc(100vh - 44px); grid-template-rows: auto 1fr auto; }
             .tl-left { border-right: none; border-bottom: 1px solid var(--border); max-height: 120px; }
@@ -1292,7 +1306,7 @@
 
     <section class="hero">
         <div class="container">
-            <div class="hero-badge"><span>v2.1.3</span> &middot; Now with Local AI &middot; Zero API Cost</div>
+            <div class="hero-badge"><span>v2.1.4</span> &middot; Org Cloud Bubbles &middot; Local AI &middot; Zero Cost</div>
             <h1>See what your <span class="gradient">AI agents</span> have learned</h1>
             <p>Visual browser for AI agent skills and memories. Now with a built-in local AI model - analyze any codebase, generate skills and memories, fully air-gapped. No API keys. No tokens. No cost.</p>
             <div class="hero-buttons">
@@ -1390,7 +1404,7 @@
                 <div class="tl-topbar">
                     <span class="tl-topbar-title">Engram Knowledge Graph</span>
                     <div class="tl-topbar-right">
-                        <span style="font-size:0.7rem;color:var(--text-muted);">Drag to rotate &middot; Scroll to zoom &middot; Click nodes for details</span>
+                        <span style="font-size:0.7rem;color:var(--text-muted);">Drag to rotate &middot; Scroll to zoom &middot; Hover clouds for org metrics &middot; Click nodes for details</span>
                         <button class="tl-close-btn" onclick="closeTimeline()">Esc &times;</button>
                     </div>
                 </div>
@@ -1403,9 +1417,12 @@
                             <div style="font-size:0.72rem;color:var(--text-muted);line-height:1.5;">
                                 <div>&#9679; Sphere = Memory session</div>
                                 <div>&#9670; Diamond = Skill</div>
+                                <div>&#9711; Cloud = Org boundary</div>
                                 <div>Size = cost (log scale)</div>
                                 <div>&#8594; Particles = data flow</div>
-                                <div style="margin-top:0.35rem;">Click node for details</div>
+                                <div style="margin-top:0.35rem;">Hover cloud = org metrics</div>
+                                <div>Click cloud = zoom to org</div>
+                                <div>Click node = full details</div>
                             </div>
                         </div>
                     </div>
@@ -1475,7 +1492,7 @@
                     <div class="feature-icon" style="background: rgba(6, 182, 212, 0.15); color: #22d3ee;">&#129504;</div>
                     <span class="feature-status status-live">Live Demo</span>
                     <h3>3D Knowledge Graph</h3>
-                    <p>Interactive 3D force-directed graph of sessions and skills. Nodes sized by cost, linked chronologically. Hover for metrics, click for full details.</p>
+                    <p>Interactive 3D force-directed graph with org cloud bubbles. Wireframe spheres group each org's nodes visually — hover a cloud for aggregate metrics (skills, sessions, word counts), click to zoom in. Nodes sized by cost, linked chronologically with flowing particles.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(34, 197, 94, 0.15); color: #4ade80;">&#128176;</div>
@@ -1531,7 +1548,7 @@
 
     <section class="code-section" id="cli">
         <div class="container">
-            <h2 style="display:flex;align-items:center;justify-content:center;gap:0.75rem;">Engram CLI <span style="background:linear-gradient(135deg,var(--primary),var(--accent));color:white;font-size:0.7rem;padding:0.25rem 0.7rem;border-radius:999px;font-weight:600;">v2.1.3 NEW</span></h2>
+            <h2 style="display:flex;align-items:center;justify-content:center;gap:0.75rem;">Engram CLI <span style="background:linear-gradient(135deg,var(--primary),var(--accent));color:white;font-size:0.7rem;padding:0.25rem 0.7rem;border-radius:999px;font-weight:600;">v2.1.4 NEW</span></h2>
             <p class="subtitle">Analyze any codebase with a local AI model. No API keys. No tokens. No cloud. One command.</p>
 
             <div class="code-block">
@@ -1587,7 +1604,7 @@
 <pre><span class="func">$</span> engram analyze fastapi/fastapi
 
 <span class="comment">╭────────────────────────────────────────╮</span>
-<span class="comment">│ Engram v2.1.3 - Local AI Code Analyzer │</span>
+<span class="comment">│ Engram v2.1.4 - Local AI Code Analyzer │</span>
 <span class="comment">╰────────────────────────────────────────╯</span>
 
 <span class="keyword">Phase 1:</span> Heuristic Analysis
@@ -1983,6 +2000,11 @@ engram.<span class="func">track</span>({
     // ==========================================
     let allMemories = [];
     let _tlOrgTree = {};
+    // Org cloud bubbles
+    let _orgClouds = null;       // THREE.Group holding cloud meshes
+    let _cloudMetrics = {};      // org -> { skills, sessions, totalWords, avgWords }
+    let _hoveredCloud = null;    // currently highlighted cloud mesh
+    let _cloudTooltipEl = null;  // tooltip DOM element
     const ORG_COLORS = {
         'engram-hq': '#a78bfa', 'sreniatnoc': '#22d3ee', 'ARTIFACTIQ': '#f59e0b',
         'mlOS-foundation': '#f472b6', 'traceloop-ai': '#34d399', 'reccaller-ai': '#fb923c',
@@ -2031,11 +2053,18 @@ engram.<span class="func">track</span>({
         // Destroy previous graph instance if rebuilding
         const gc = document.getElementById('tl-graph-container');
         if (window._tlGraph) {
+            // Clean up org clouds
+            if (_orgClouds) {
+                try { window._tlGraph.scene().remove(_orgClouds); } catch(e) {}
+                _orgClouds = null;
+            }
             try { window._tlGraph._destructor(); } catch(e) {}
             window._tlGraph = null;
         }
         // Remove leftover DOM elements from previous graph
         gc.querySelectorAll('canvas, .scene-tooltip, .graph-tooltip, .tl-legend, .scene-nav-info').forEach(el => el.remove());
+        // Clean up cloud tooltip
+        if (_cloudTooltipEl) { _cloudTooltipEl.remove(); _cloudTooltipEl = null; }
 
         const memories = buildMemories();
 
@@ -2375,6 +2404,9 @@ engram.<span class="func">track</span>({
         // Store graph ref
         window._tlGraph = graph;
 
+        // Create org cloud bubbles after simulation settles
+        setTimeout(createOrgClouds, 1200);
+
         // Handle resize
         const ro = new ResizeObserver(() => {
             graph.width(container.clientWidth);
@@ -2417,6 +2449,17 @@ engram.<span class="func">track</span>({
     function filterGraph(org) {
         if (!window._tlGraph) return;
         const graph = window._tlGraph;
+
+        // Toggle cloud visibility: show on "All", hide when filtering to specific org
+        if (_orgClouds) {
+            const show = !org;
+            _orgClouds.visible = show;
+            _orgClouds.children.forEach(m => { m.visible = show; });
+        }
+        // Hide tooltip and reset highlight
+        if (_cloudTooltipEl) _cloudTooltipEl.style.display = 'none';
+        if (_hoveredCloud) { _hoveredCloud.material.opacity = 0.15; _hoveredCloud = null; }
+
         graph
             .nodeVisibility(n => !org || n.org === org)
             .linkVisibility(l => {
@@ -2498,6 +2541,198 @@ engram.<span class="func">track</span>({
 
         if (node.memData) loadMemory(node.memData);
         else if (node.skillData) loadSkillInDetail(node.skillData);
+    }
+
+    // ==========================================
+    // Org Cloud Bubbles
+    // ==========================================
+    function createOrgClouds() {
+        const graph = window._tlGraph;
+        if (!graph) return;
+        const scene = graph.scene();
+        if (!scene) return;
+        const THREE = window.THREE;
+        if (!THREE) return;
+
+        // Remove old clouds
+        if (_orgClouds) {
+            scene.remove(_orgClouds);
+            _orgClouds = null;
+        }
+
+        const gdata = graph.graphData();
+        if (!gdata || !gdata.nodes.length) return;
+
+        // Group nodes by org
+        const orgNodeMap = {};
+        gdata.nodes.forEach(n => {
+            if (!orgNodeMap[n.org]) orgNodeMap[n.org] = [];
+            orgNodeMap[n.org].push(n);
+        });
+
+        // Compute metrics from graph nodes
+        _cloudMetrics = {};
+        gdata.nodes.forEach(n => {
+            if (!_cloudMetrics[n.org]) _cloudMetrics[n.org] = { skills: 0, sessions: 0, totalWords: 0, count: 0 };
+            if (n.nodeType === 'skill') _cloudMetrics[n.org].skills++;
+            else _cloudMetrics[n.org].sessions++;
+            _cloudMetrics[n.org].totalWords += (n.words || 0);
+            _cloudMetrics[n.org].count++;
+        });
+        Object.values(_cloudMetrics).forEach(m => {
+            m.avgWords = m.count > 0 ? Math.round(m.totalWords / m.count) : 0;
+        });
+
+        _orgClouds = new THREE.Group();
+
+        Object.entries(orgNodeMap).forEach(([org, nodes]) => {
+            if (nodes.length < 1) return;
+
+            // Centroid
+            let cx = 0, cy = 0, cz = 0;
+            nodes.forEach(n => { cx += (n.x || 0); cy += (n.y || 0); cz += (n.z || 0); });
+            cx /= nodes.length; cy /= nodes.length; cz /= nodes.length;
+
+            // Radius
+            let maxDist = 0;
+            nodes.forEach(n => {
+                const d = Math.hypot((n.x || 0) - cx, (n.y || 0) - cy, (n.z || 0) - cz);
+                if (d > maxDist) maxDist = d;
+            });
+            const radius = Math.max(maxDist + 25, 15);
+
+            const color = new THREE.Color(ORG_COLORS[org] || DEFAULT_NODE_COLOR);
+            const geo = new THREE.SphereGeometry(radius, 32, 24);
+
+            const mat = new THREE.MeshBasicMaterial({
+                color: color,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.15,
+                depthWrite: false,
+                fog: false,
+            });
+
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(cx, cy, cz);
+            mesh.renderOrder = -1;
+            mesh.userData = { org: org, isOrgCloud: true, cloudRadius: radius };
+            _orgClouds.add(mesh);
+        });
+
+        scene.add(_orgClouds);
+
+        // Create tooltip element
+        if (!_cloudTooltipEl) {
+            _cloudTooltipEl = document.createElement('div');
+            _cloudTooltipEl.className = 'cloud-tooltip';
+            document.body.appendChild(_cloudTooltipEl);
+        }
+
+        // Track mouse globally — completely independent of ForceGraph3D events
+        window._cloudMouseX = 0;
+        window._cloudMouseY = 0;
+        window._cloudMouseClick = false;
+        window.addEventListener('mousemove', function(e) {
+            window._cloudMouseX = e.clientX;
+            window._cloudMouseY = e.clientY;
+        });
+        window.addEventListener('click', function() {
+            window._cloudMouseClick = true;
+        });
+
+        // Start polling loop — runs every frame, checks mouse vs cloud positions
+        _cloudPollLoop();
+    }
+
+    function _cloudPollLoop() {
+        requestAnimationFrame(_cloudPollLoop);
+        if (!window._tlGraph || !_orgClouds || !_orgClouds.visible) {
+            if (_cloudTooltipEl) _cloudTooltipEl.style.display = 'none';
+            return;
+        }
+
+        const container = document.getElementById('tl-graph-container');
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        const mx = window._cloudMouseX;
+        const my = window._cloudMouseY;
+
+        // Check if mouse is over graph area
+        if (mx < rect.left || mx > rect.right || my < rect.top || my > rect.bottom) {
+            if (_hoveredCloud) { _hoveredCloud.material.opacity = 0.15; _hoveredCloud = null; }
+            if (_cloudTooltipEl) _cloudTooltipEl.style.display = 'none';
+            window._cloudMouseClick = false;
+            return;
+        }
+
+        const mouseX = mx - rect.left;
+        const mouseY = my - rect.top;
+        const graph = window._tlGraph;
+        const w = rect.width, h = rect.height;
+
+        let bestMesh = null, bestDist = Infinity;
+
+        for (const mesh of _orgClouds.children) {
+            if (!mesh.visible || !mesh.userData.isOrgCloud) continue;
+
+            // Use ForceGraph3D's built-in projection (handles all internal transforms)
+            const pos = mesh.position;
+            const sc = graph.graph2ScreenCoords(pos.x, pos.y, pos.z);
+            const sx = sc.x;
+            const sy = sc.y;
+
+            // Skip if way off-screen
+            if (sx < -300 || sx > w + 300 || sy < -300 || sy > h + 300) continue;
+
+            // Screen radius: project offset points in both axes, take max (handles any camera angle)
+            const r3d = mesh.userData.cloudRadius || 30;
+            const edgeSc = graph.graph2ScreenCoords(pos.x + r3d, pos.y, pos.z);
+            const edgeSc2 = graph.graph2ScreenCoords(pos.x, pos.y + r3d, pos.z);
+            const screenRadius = Math.max(
+                Math.hypot(edgeSc.x - sx, edgeSc.y - sy),
+                Math.hypot(edgeSc2.x - sx, edgeSc2.y - sy),
+                10
+            );
+
+            const dist = Math.hypot(mouseX - sx, mouseY - sy);
+            if (dist < screenRadius && dist < bestDist) {
+                bestDist = dist;
+                bestMesh = mesh;
+            }
+        }
+
+        // Handle click
+        if (window._cloudMouseClick) {
+            window._cloudMouseClick = false;
+            if (bestMesh && bestMesh.userData.isOrgCloud) {
+                filterGraph(bestMesh.userData.org);
+                return;
+            }
+        }
+
+        // Handle hover
+        if (bestMesh) {
+            if (_hoveredCloud && _hoveredCloud !== bestMesh) _hoveredCloud.material.opacity = 0.15;
+            _hoveredCloud = bestMesh;
+            bestMesh.material.opacity = 0.3;
+
+            const org = bestMesh.userData.org;
+            const m = _cloudMetrics[org] || {};
+            const color = ORG_COLORS[org] || DEFAULT_NODE_COLOR;
+            _cloudTooltipEl.innerHTML =
+                '<div class="ct-org" style="color:' + color + ';">' + escapeHtml(org) + '</div>' +
+                '<div class="ct-row">Skills: ' + (m.skills || 0) + ' &middot; Sessions: ' + (m.sessions || 0) + '</div>' +
+                '<div class="ct-row">Total words: ' + ((m.totalWords || 0).toLocaleString()) + '</div>' +
+                '<div class="ct-row">Avg words/item: ' + ((m.avgWords || 0).toLocaleString()) + '</div>' +
+                '<div class="ct-hint">Click to zoom into org</div>';
+            _cloudTooltipEl.style.display = 'block';
+            _cloudTooltipEl.style.left = (mx + 14) + 'px';
+            _cloudTooltipEl.style.top = (my + 14) + 'px';
+        } else {
+            if (_hoveredCloud) { _hoveredCloud.material.opacity = 0.15; _hoveredCloud = null; }
+            if (_cloudTooltipEl) _cloudTooltipEl.style.display = 'none';
+        }
     }
 
     function loadMemory(mem) {
