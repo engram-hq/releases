@@ -912,7 +912,7 @@
 
         /* Org cloud tooltip */
         .cloud-tooltip {
-            position: fixed; pointer-events: none; z-index: 300;
+            position: fixed; pointer-events: none; z-index: 10;
             background: rgba(9,9,11,0.95); border: 1px solid rgba(255,255,255,0.12);
             border-radius: 10px; padding: 10px 14px; font-size: 13px;
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -2622,11 +2622,11 @@ engram.<span class="func">track</span>({
 
         scene.add(_orgClouds);
 
-        // Create tooltip element
+        // Create tooltip inside graph container (inherits panel stacking context — no z-index wars)
         if (!_cloudTooltipEl) {
             _cloudTooltipEl = document.createElement('div');
             _cloudTooltipEl.className = 'cloud-tooltip';
-            document.body.appendChild(_cloudTooltipEl);
+            (document.getElementById('tl-graph-container') || document.body).appendChild(_cloudTooltipEl);
         }
 
         // Track mouse globally — completely independent of ForceGraph3D events
