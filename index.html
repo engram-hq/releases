@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"><script>(function(){var s=localStorage.getItem('engram-theme'),p=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',s||p)})()</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,28 +8,50 @@
     <meta property="og:title" content="Engram - Visual Browser for AI Agent Skills & Memories">
     <meta property="og:description" content="Browse, search, and analyze AI agent skills and memories across your GitHub repos.">
     <meta property="og:type" content="website">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #8b5cf6;
-            --primary-light: #a78bfa;
-            --primary-dark: #7c3aed;
-            --accent: #06b6d4;
-            --bg-dark: #09090b;
-            --bg-card: rgba(255, 255, 255, 0.03);
-            --bg-card-hover: rgba(255, 255, 255, 0.06);
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #fafafa;
-            --text-muted: #a1a1aa;
-            --code-bg: #18181b;
-            --success: #22c55e;
+            --primary: #1A6B5A;
+            --primary-light: #238C72;
+            --primary-dark: #14544A;
+            --accent: #C4913B;
+            --accent-light: #D4A34E;
+            --bg: #FAFAF8;
+            --bg-card: #FFFFFF;
+            --bg-card-hover: #F5F5F0;
+            --bg-nav: rgba(250, 250, 248, 0.92);
+            --border: #E2E0DA;
+            --border-hover: #C4913B;
+            --text: #1A1A18;
+            --text-muted: #6B6B63;
+            --code-bg: #F0EFE9;
+            --success: #2D8659;
+        }
+
+        [data-theme="dark"] {
+            --primary: #3DAA8A;
+            --primary-light: #4CC9A3;
+            --primary-dark: #2D8A6E;
+            --accent: #D4A34E;
+            --accent-light: #E0B86A;
+            --bg: #111110;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.07);
+            --bg-nav: rgba(17, 17, 16, 0.92);
+            --border: rgba(255, 255, 255, 0.09);
+            --border-hover: #D4A34E;
+            --text: #E8E8E2;
+            --text-muted: #9B9B8F;
+            --code-bg: #1A1A18;
+            --success: #3DAA8A;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: var(--bg-dark);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
             color: var(--text);
             line-height: 1.6;
         }
@@ -47,7 +69,7 @@
             left: 0;
             right: 0;
             z-index: 100;
-            background: rgba(9, 9, 11, 0.9);
+            background: var(--bg-nav);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
         }
@@ -62,10 +84,8 @@
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary);
+            font-family: 'Source Serif 4', serif;
             text-decoration: none;
         }
 
@@ -103,30 +123,20 @@
             overflow: hidden;
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.15), transparent 60%);
-            pointer-events: none;
-        }
+        /* hero glow removed */
 
         .hero-badge {
             display: inline-block;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 999px;
+            border-radius: 6px;
             padding: 0.35rem 1rem;
             font-size: 0.8rem;
             color: var(--text-muted);
             margin-bottom: 2rem;
         }
 
-        .hero-badge span { color: var(--primary-light); }
+        .hero-badge span { color: var(--accent); }
 
         .hero h1 {
             font-size: 4rem;
@@ -136,13 +146,11 @@
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
+            font-family: 'Source Serif 4', serif;
         }
 
         .hero h1 .gradient {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--accent);
         }
 
         .hero p {
@@ -174,7 +182,6 @@
 
         .btn-primary:hover {
             background: var(--primary-dark);
-            transform: translateY(-1px);
         }
 
         .btn-secondary {
@@ -204,6 +211,7 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
+            font-family: 'Source Serif 4', serif;
         }
 
         .features .subtitle {
@@ -238,18 +246,17 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
             padding: 0.2rem 0.6rem;
-            border-radius: 999px;
+            border-radius: 6px;
             margin-bottom: 0.5rem;
         }
 
-        .status-live { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
-        .status-beta { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
-        .status-roadmap { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+        .status-live { background: rgba(45, 134, 89, 0.12); color: var(--success); }
+        .status-beta { background: rgba(196, 145, 59, 0.12); color: var(--accent); }
+        .status-roadmap { background: rgba(26, 107, 90, 0.12); color: var(--primary); }
 
         .feature-card:hover {
             background: var(--bg-card-hover);
-            border-color: rgba(139, 92, 246, 0.3);
-            transform: translateY(-2px);
+            border-color: var(--border-hover);
         }
 
         .feature-icon {
@@ -286,6 +293,7 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
+            font-family: 'Source Serif 4', serif;
         }
 
         .architecture .subtitle {
@@ -323,9 +331,9 @@
             height: 3px;
         }
 
-        .tier-card.tier-1::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-        .tier-card.tier-2::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-        .tier-card.tier-3::before { background: linear-gradient(90deg, #22c55e, #4ade80); }
+        .tier-card.tier-1::before { background: var(--primary); }
+        .tier-card.tier-2::before { background: var(--accent); }
+        .tier-card.tier-3::before { background: var(--success); }
 
         .tier-label {
             display: inline-block;
@@ -334,13 +342,13 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
             padding: 0.25rem 0.75rem;
-            border-radius: 999px;
+            border-radius: 6px;
             margin-bottom: 1rem;
         }
 
-        .tier-1 .tier-label { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
-        .tier-2 .tier-label { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
-        .tier-3 .tier-label { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .tier-1 .tier-label { background: rgba(26, 107, 90, 0.12); color: var(--primary); }
+        .tier-2 .tier-label { background: rgba(196, 145, 59, 0.12); color: var(--accent); }
+        .tier-3 .tier-label { background: rgba(45, 134, 89, 0.12); color: var(--success); }
 
         .tier-card h3 {
             font-size: 1.3rem;
@@ -371,6 +379,7 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
+            font-family: 'Source Serif 4', serif;
         }
 
         .code-section .subtitle {
@@ -400,11 +409,16 @@
             color: var(--text-muted);
         }
 
-        .code-block .keyword { color: #c084fc; }
-        .code-block .string { color: #86efac; }
-        .code-block .comment { color: #52525b; }
-        .code-block .func { color: #60a5fa; }
-        .code-block .number { color: #fbbf24; }
+        .code-block .keyword { color: var(--primary); }
+        .code-block .string { color: var(--success); }
+        .code-block .comment { color: var(--text-muted); }
+        .code-block .func { color: var(--accent); }
+        .code-block .number { color: var(--accent); }
+        [data-theme="dark"] .code-block .keyword { color: #c084fc; }
+        [data-theme="dark"] .code-block .string { color: #86efac; }
+        [data-theme="dark"] .code-block .comment { color: #52525b; }
+        [data-theme="dark"] .code-block .func { color: #60a5fa; }
+        [data-theme="dark"] .code-block .number { color: #fbbf24; }
 
         /* Stats */
         .stats {
@@ -422,10 +436,7 @@
         .stat-value {
             font-size: 3rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary);
         }
 
         .stat-label {
@@ -441,22 +452,13 @@
             position: relative;
         }
 
-        .cta::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(6, 182, 212, 0.1), transparent 60%);
-            pointer-events: none;
-        }
+        /* cta glow removed */
 
         .cta h2 {
             font-size: 3rem;
             font-weight: 800;
             margin-bottom: 1.5rem;
+            font-family: 'Source Serif 4', serif;
         }
 
         .cta p {
@@ -505,6 +507,7 @@
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 1.5rem;
+            font-family: 'Source Serif 4', serif;
         }
 
         .video-wrapper {
@@ -513,7 +516,7 @@
             overflow: hidden;
             border: 1px solid var(--border);
             background: #000;
-            box-shadow: 0 0 60px rgba(139, 92, 246, 0.1);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
         }
 
         .video-wrapper video {
@@ -537,6 +540,7 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            font-family: 'Source Serif 4', serif;
         }
 
         .demo .subtitle {
@@ -615,7 +619,7 @@
         .demo-content .meta-tag {
             font-size: 0.75rem;
             padding: 0.2rem 0.6rem;
-            border-radius: 999px;
+            border-radius: 6px;
             background: var(--code-bg);
             color: var(--text-muted);
             border: 1px solid var(--border);
@@ -735,7 +739,7 @@
         }
 
         .tree-file:hover { background: var(--bg-card-hover); color: var(--text); }
-        .tree-file.active { background: rgba(139, 92, 246, 0.15); color: var(--primary-light); }
+        .tree-file.active { background: rgba(26, 107, 90, 0.12); color: var(--primary); }
 
         .tree-file .file-icon { font-size: 0.9rem; }
 
@@ -743,7 +747,7 @@
             font-size: 0.65rem;
             font-weight: 600;
             padding: 0.1rem 0.4rem;
-            border-radius: 999px;
+            border-radius: 6px;
             margin-left: auto;
             flex-shrink: 0;
         }
@@ -771,7 +775,7 @@
         }
         .demo-tab:hover { color: var(--text); }
         .demo-tab.active {
-            color: var(--primary-light);
+            color: var(--primary);
             border-bottom-color: var(--primary);
         }
         .demo-tab-panel { display: none; }
@@ -783,7 +787,7 @@
             position: fixed;
             inset: 0;
             z-index: 200;
-            background: var(--bg-dark);
+            background: var(--bg);
             padding: 0;
         }
         .tl-topbar {
@@ -800,10 +804,7 @@
         .tl-topbar-title {
             font-size: 0.9rem;
             font-weight: 600;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary);
         }
         .tl-topbar-right { display: flex; align-items: center; gap: 0.75rem; }
         .tl-close-btn {
@@ -817,7 +818,7 @@
             grid-template-columns: 200px 1fr 340px;
             height: calc(100vh - 44px);
             overflow: hidden;
-            background: var(--bg-dark);
+            background: var(--bg);
         }
         .tl-left {
             background: rgba(255,255,255,0.02);
@@ -844,14 +845,14 @@
             justify-content: space-between;
         }
         .tl-org-item:hover { background: var(--bg-card-hover); }
-        .tl-org-item.active { background: rgba(139,92,246,0.15); color: var(--primary-light); }
+        .tl-org-item.active { background: rgba(26, 107, 90, 0.12); color: var(--primary); }
         .tl-org-dot {
             width: 8px; height: 8px; border-radius: 50%;
             display: inline-block; margin-right: 6px; flex-shrink: 0;
         }
         .tl-count {
             font-size: 0.68rem; color: var(--text-muted);
-            background: rgba(255,255,255,0.05); padding: 0.1rem 0.4rem; border-radius: 999px;
+            background: rgba(255,255,255,0.05); padding: 0.1rem 0.4rem; border-radius: 6px;
         }
         .tl-session-list { margin: 0.2rem 0 0.4rem 1.25rem; }
         .tl-session-item {
@@ -860,7 +861,7 @@
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .tl-session-item:hover { background: var(--bg-card-hover); color: var(--text); }
-        .tl-session-item.active { color: var(--primary-light); background: rgba(139,92,246,0.1); }
+        .tl-session-item.active { color: var(--primary); background: rgba(26, 107, 90, 0.08); }
         .tl-graph {
             position: relative; overflow: hidden; background: #050508;
         }
@@ -930,8 +931,8 @@
             .tl-right { border-left: none; border-top: 1px solid var(--border); max-height: 250px; }
         }
 
-        .tier-badge-sm.t2 { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
-        .tier-badge-sm.t3 { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .tier-badge-sm.t2 { background: rgba(196, 145, 59, 0.12); color: var(--accent); }
+        .tier-badge-sm.t3 { background: rgba(45, 134, 89, 0.12); color: var(--success); }
 
         .demo-loading {
             display: flex;
@@ -992,7 +993,7 @@
             margin-top: 0.5rem;
             transition: color 0.15s;
         }
-        .gh-link:hover { color: var(--primary-light); }
+        .gh-link:hover { color: var(--primary); }
 
         .word-count {
             font-size: 0.75rem;
@@ -1018,7 +1019,7 @@
             transition: border-color 0.2s;
         }
         .search-input:focus { border-color: var(--primary); }
-        .search-input::placeholder { color: #52525b; }
+        .search-input::placeholder { color: var(--text-muted); }
         .search-filters {
             display: flex;
             gap: 0.5rem;
@@ -1026,7 +1027,7 @@
         }
         .filter-chip {
             padding: 0.3rem 0.8rem;
-            border-radius: 999px;
+            border-radius: 6px;
             font-size: 0.8rem;
             font-weight: 500;
             cursor: pointer;
@@ -1036,7 +1037,7 @@
             transition: all 0.15s;
         }
         .filter-chip:hover { border-color: var(--primary); color: var(--text); }
-        .filter-chip.active { background: rgba(139, 92, 246, 0.15); border-color: var(--primary); color: var(--primary-light); }
+        .filter-chip.active { background: rgba(26, 107, 90, 0.12); border-color: var(--primary); color: var(--primary); }
         .search-results { max-height: 500px; overflow-y: auto; }
         .search-result {
             background: var(--bg-card);
@@ -1047,11 +1048,11 @@
             cursor: pointer;
             transition: all 0.15s;
         }
-        .search-result:hover { border-color: rgba(139, 92, 246, 0.4); background: var(--bg-card-hover); }
+        .search-result:hover { border-color: var(--accent); background: var(--bg-card-hover); }
         .search-result-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
         .search-result-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
         .search-result-snippet { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
-        .search-result-snippet mark { background: rgba(139, 92, 246, 0.3); color: var(--text); border-radius: 2px; padding: 0 2px; }
+        .search-result-snippet mark { background: rgba(196, 145, 59, 0.25); color: var(--text); border-radius: 2px; padding: 0 2px; }
         .search-count { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
         .search-empty { text-align: center; padding: 3rem; color: var(--text-muted); }
 
@@ -1072,10 +1073,7 @@
         .analytics-card .value {
             font-size: 1.8rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary);
         }
         .analytics-card .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
         .chart-section { margin-bottom: 2rem; }
@@ -1093,7 +1091,7 @@
             width: 100%;
             max-width: 60px;
             border-radius: 6px 6px 0 0;
-            background: linear-gradient(to top, var(--primary), var(--primary-light));
+            background: var(--primary);
             transition: height 0.5s ease-out;
             position: relative;
             min-height: 4px;
@@ -1105,7 +1103,7 @@
             transform: translateX(-50%);
             font-size: 0.75rem;
             font-weight: 600;
-            color: var(--primary-light);
+            color: var(--primary);
             white-space: nowrap;
         }
         .bar-label { font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 0.4rem; }
@@ -1165,15 +1163,15 @@
             padding: 0.4rem 0.5rem;
             font-size: 0.8rem;
             color: var(--text-muted);
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--border);
         }
         .sync-file-item .icon { flex-shrink: 0; }
-        .sync-file-item .hash { margin-left: auto; font-family: monospace; font-size: 0.7rem; color: #52525b; }
+        .sync-file-item .hash { margin-left: auto; font-family: monospace; font-size: 0.7rem; color: var(--text-muted); }
         .sync-stat-row {
             display: flex;
             justify-content: space-between;
             padding: 0.5rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--border);
             font-size: 0.85rem;
         }
         .sync-stat-row .label { color: var(--text-muted); }
@@ -1187,7 +1185,7 @@
         }
         .sync-progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--success));
+            background: var(--primary);
             border-radius: 2px;
             width: 100%;
             animation: syncPulse 2s ease-in-out infinite;
@@ -1210,7 +1208,7 @@
             transition: all 0.15s;
             margin-left: 0.5rem;
         }
-        .share-btn:hover { border-color: var(--primary); color: var(--primary-light); background: rgba(139, 92, 246, 0.08); }
+        .share-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(26, 107, 90, 0.08); }
         .share-toast {
             position: fixed;
             bottom: 2rem;
@@ -1243,11 +1241,11 @@
         }
         .explore-chips-label {
             font-size: 0.75rem;
-            color: #52525b;
+            color: var(--text-muted);
         }
         .explore-chip {
             padding: 0.3rem 0.8rem;
-            border-radius: 999px;
+            border-radius: 6px;
             font-size: 0.8rem;
             font-weight: 500;
             cursor: pointer;
@@ -1258,9 +1256,9 @@
         }
         .explore-chip:hover { border-color: var(--primary); color: var(--text); }
         .explore-chip.active {
-            background: rgba(139, 92, 246, 0.15);
+            background: rgba(26, 107, 90, 0.12);
             border-color: var(--primary);
-            color: var(--primary-light);
+            color: var(--primary);
         }
         .explore-status {
             text-align: center;
@@ -1270,6 +1268,43 @@
             min-height: 1.2em;
         }
         .explore-status.error { color: #fb7185; }
+
+        /* Theme toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s, border-color 0.2s;
+            margin-left: 0.75rem;
+        }
+        .theme-toggle:hover { color: var(--text); border-color: var(--text-muted); }
+        :root .icon-moon, [data-theme="light"] .icon-moon { display: none; }
+        :root .icon-sun, [data-theme="light"] .icon-sun { display: block; }
+        [data-theme="dark"] .icon-sun { display: none; }
+        [data-theme="dark"] .icon-moon { display: block; }
+
+        /* 3D Timeline always-dark scope */
+        #panel-timeline {
+            --primary: #3DAA8A;
+            --primary-light: #4CC9A3;
+            --primary-dark: #2D8A6E;
+            --accent: #D4A34E;
+            --bg: #111110;
+            --bg-card: rgba(255,255,255,0.04);
+            --bg-card-hover: rgba(255,255,255,0.07);
+            --bg-nav: rgba(17,17,16,0.92);
+            --border: rgba(255,255,255,0.09);
+            --border-hover: #D4A34E;
+            --text: #E8E8E2;
+            --text-muted: #9B9B8F;
+            --code-bg: #1A1A18;
+            --success: #3DAA8A;
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -1301,6 +1336,10 @@
                 <li><a href="https://github.com/engram-hq" target="_blank">GitHub</a></li>
                 <li><a href="https://github.com/engram-hq/engram-web" class="nav-cta">Get Started</a></li>
             </ul>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            </button>
         </div>
     </nav>
 
@@ -1483,37 +1522,37 @@
             <p class="subtitle">Engram indexes skills and memories from your GitHub repos and gives you a visual dashboard to browse, search, and analyze them.</p>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa;">&#9889;</div>
+                    <div class="feature-icon" style="background: rgba(26, 107, 90, 0.12); color: var(--primary);">&#9889;</div>
                     <span class="feature-status status-live">Live Demo</span>
                     <h3>Skill Browser</h3>
                     <p>Navigate your 3-tier skill hierarchy (User, Org, Repo) with tree view and list view. See frontmatter metadata, rendered markdown, and word counts.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon" style="background: rgba(6, 182, 212, 0.15); color: #22d3ee;">&#129504;</div>
+                    <div class="feature-icon" style="background: rgba(26, 107, 90, 0.12); color: var(--primary);">&#129504;</div>
                     <span class="feature-status status-live">Live Demo</span>
                     <h3>3D Knowledge Graph</h3>
                     <p>Interactive 3D force-directed graph with org cloud bubbles. Wireframe spheres group each org's nodes visually — hover a cloud for aggregate metrics (skills, sessions, word counts), click to zoom in. Nodes sized by cost, linked chronologically with flowing particles.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon" style="background: rgba(34, 197, 94, 0.15); color: #4ade80;">&#128176;</div>
+                    <div class="feature-icon" style="background: rgba(196, 145, 59, 0.12); color: var(--accent);">&#128176;</div>
                     <span class="feature-status status-live">Live Demo</span>
                     <h3>AI Cost Analytics</h3>
                     <p>Track agent activity and costs. Session counts, model usage, and org distribution from real data. Per-session cost tracking via SDK or memory frontmatter. Try the Analytics tab above.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">&#128270;</div>
+                    <div class="feature-icon" style="background: rgba(196, 145, 59, 0.12); color: var(--accent);">&#128270;</div>
                     <span class="feature-status status-live">Live Demo</span>
                     <h3>Full-Text Search</h3>
                     <p>Search across all skills and memories with full-text matching. Faceted results by type, org, and tier with highlighted snippets. Try the Search tab above.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon" style="background: rgba(244, 63, 94, 0.15); color: #fb7185;">&#128260;</div>
+                    <div class="feature-icon" style="background: rgba(45, 134, 89, 0.12); color: var(--success);">&#128260;</div>
                     <span class="feature-status status-live">Live Demo</span>
                     <h3>GitHub Sync</h3>
                     <p>Auto-discover orgs, scan repos for .skills/ and .memory/ directories. Incremental sync with content hashing. See the Sync tab above for a live view.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">&#128241;</div>
+                    <div class="feature-icon" style="background: rgba(26, 107, 90, 0.12); color: var(--primary);">&#128241;</div>
                     <span class="feature-status status-roadmap">Roadmap</span>
                     <h3>iOS App</h3>
                     <p>Native SwiftUI app with Swift Charts for analytics. 59 tests passing, App Store metadata prepared. Pending Apple Developer enrollment and backend deployment.</p>
@@ -1548,7 +1587,7 @@
 
     <section class="code-section" id="cli">
         <div class="container">
-            <h2 style="display:flex;align-items:center;justify-content:center;gap:0.75rem;">Engram CLI <span style="background:linear-gradient(135deg,var(--primary),var(--accent));color:white;font-size:0.7rem;padding:0.25rem 0.7rem;border-radius:999px;font-weight:600;">v2.1.4 NEW</span></h2>
+            <h2 style="display:flex;align-items:center;justify-content:center;gap:0.75rem;font-family:'Source Serif 4',serif;">Engram CLI <span style="background:var(--accent);color:white;font-size:0.7rem;padding:0.25rem 0.7rem;border-radius:6px;font-weight:600;font-family:'Inter',sans-serif;">v2.1.4 NEW</span></h2>
             <p class="subtitle">Analyze any codebase with a local AI model. No API keys. No tokens. No cloud. One command.</p>
 
             <div class="code-block">
@@ -1708,6 +1747,22 @@ engram.<span class="func">track</span>({
             <p>&copy; 2026 Engram. Built by <a href="https://ishaileshpant.github.io">Shailesh Pant</a>.</p>
         </div>
     </footer>
+    <script>
+    // Theme toggle
+    function toggleTheme() {
+        var html = document.documentElement;
+        var current = html.getAttribute('data-theme');
+        var next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('engram-theme', next);
+    }
+    // Init theme on load
+    (function() {
+        var saved = localStorage.getItem('engram-theme');
+        var pref = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', saved || pref);
+    })();
+    </script>
     <script src="demo-data.js"></script>
     <script>window.SHOWCASE_DATA = null;</script>
     <script>
