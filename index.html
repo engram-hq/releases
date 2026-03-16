@@ -1345,9 +1345,9 @@
 
     <section class="hero">
         <div class="container">
-            <div class="hero-badge"><span>v2.1.4</span> &middot; Org Cloud Bubbles &middot; Local AI &middot; Zero Cost</div>
+            <div class="hero-badge"><span>v3.1.0</span> &middot; Additive Analysis &middot; Self-Upgrade &middot; Local AI &middot; Zero Cost</div>
             <h1>See what your <span class="gradient">AI agents</span> have learned</h1>
-            <p>Visual browser for AI agent skills and memories. Now with a built-in local AI model - analyze any codebase, generate skills and memories, fully air-gapped. No API keys. No tokens. No cost.</p>
+            <p>Visual browser for AI agent skills and memories with a built-in local AI model. Additive analysis builds on existing knowledge instead of starting from scratch. Fully air-gapped. No API keys. No cost.</p>
             <div class="hero-buttons">
                 <a href="#demo" class="btn-primary">Try Live Demo</a>
                 <a href="#cli" class="btn-secondary">Install CLI</a>
@@ -1380,7 +1380,7 @@
                     <div class="stat-label">Embedded Model</div>
                 </div>
                 <div>
-                    <div class="stat-value">261</div>
+                    <div class="stat-value">204+</div>
                     <div class="stat-label">Tests Passing</div>
                 </div>
                 <div>
@@ -1552,6 +1552,18 @@
                     <p>Auto-discover orgs, scan repos for .skills/ and .memory/ directories. Incremental sync with content hashing. See the Sync tab above for a live view.</p>
                 </div>
                 <div class="feature-card">
+                    <div class="feature-icon" style="background: rgba(45, 134, 89, 0.12); color: var(--success);">&#128257;</div>
+                    <span class="feature-status status-live">v3.1</span>
+                    <h3>Additive Analysis</h3>
+                    <p>Discovers existing skills and memories in your repo before generating. Feeds them as context to the model, which merges: preserving accurate content, updating stale info, and adding net-new insights. Use <code>--fresh</code> for from-scratch mode.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: rgba(196, 145, 59, 0.12); color: var(--accent);">&#128640;</div>
+                    <span class="feature-status status-live">v3.1</span>
+                    <h3>One-Line Install &amp; Self-Upgrade</h3>
+                    <p>Single curl command installs pipx, engram-cli, and Ollama. Built-in <code>engram upgrade</code> command checks PyPI and upgrades in place. No manual version management.</p>
+                </div>
+                <div class="feature-card">
                     <div class="feature-icon" style="background: rgba(26, 107, 90, 0.12); color: var(--primary);">&#128241;</div>
                     <span class="feature-status status-roadmap">Roadmap</span>
                     <h3>iOS App</h3>
@@ -1587,31 +1599,33 @@
 
     <section class="code-section" id="cli">
         <div class="container">
-            <h2 style="display:flex;align-items:center;justify-content:center;gap:0.75rem;font-family:'Source Serif 4',serif;">Engram CLI <span style="background:var(--accent);color:white;font-size:0.7rem;padding:0.25rem 0.7rem;border-radius:6px;font-weight:600;font-family:'Inter',sans-serif;">v2.1.4 NEW</span></h2>
-            <p class="subtitle">Analyze any codebase with a local AI model. No API keys. No tokens. No cloud. One command.</p>
+            <h2 style="display:flex;align-items:center;justify-content:center;gap:0.75rem;font-family:'Source Serif 4',serif;">Engram CLI <span style="background:var(--accent);color:white;font-size:0.7rem;padding:0.25rem 0.7rem;border-radius:6px;font-weight:600;font-family:'Inter',sans-serif;">v3.1.0</span></h2>
+            <p class="subtitle">Analyze any codebase with a local AI model. Builds on existing knowledge. No API keys. No cloud. One command.</p>
 
             <div class="code-block">
-<pre><span class="comment"># Install (one-time setup)</span>
-<span class="func">brew</span> install ollama              <span class="comment"># macOS</span>
-<span class="func">pipx</span> install engram-cli           <span class="comment"># or: pip install engram-cli</span>
+<pre><span class="comment"># One-line install (pipx + engram + ollama)</span>
+<span class="func">curl</span> -fsSL https://raw.githubusercontent.com/engram-hq/engram-cli/main/install.sh | bash
 
-<span class="comment"># Analyze any local repo</span>
+<span class="comment"># Or manually</span>
+<span class="func">brew</span> install ollama pipx && <span class="func">pipx</span> install engram-cli
+
+<span class="comment"># Analyze any repo (discovers existing skills automatically)</span>
 <span class="func">engram</span> analyze .
 
-<span class="comment"># Analyze a GitHub repo by URL</span>
-<span class="func">engram</span> analyze https://github.com/fastapi/fastapi
-
-<span class="comment"># Or shorthand</span>
+<span class="comment"># Analyze a GitHub repo</span>
 <span class="func">engram</span> analyze pallets/flask --org pallets
 
 <span class="comment"># Browse results in a local visual dashboard</span>
-<span class="func">engram</span> browse</pre>
+<span class="func">engram</span> browse
+
+<span class="comment"># Self-upgrade to latest version</span>
+<span class="func">engram</span> upgrade</pre>
             </div>
 
             <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:1.5rem;">
                 First run downloads Qwen2.5-Coder 7B (~4.5GB, one-time). Runs on 8GB RAM.<br>
                 Upgrade models anytime: <code style="background:var(--code-bg);padding:2px 6px;border-radius:4px;">engram analyze . --model qwen2.5-coder:14b</code><br>
-                macOS: install pipx first with <code style="background:var(--code-bg);padding:2px 6px;border-radius:4px;">brew install pipx</code> &middot; Linux: <code style="background:var(--code-bg);padding:2px 6px;border-radius:4px;">pip install engram-cli</code> also works
+                <code style="background:var(--code-bg);padding:2px 6px;border-radius:4px;">engram upgrade</code> checks PyPI and upgrades in place
             </p>
 
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2.5rem;">
@@ -1626,44 +1640,47 @@
                     <p style="font-size:0.85rem;color:var(--text-muted);">No API tokens burned. Analyze unlimited repos. Perfect for researchers and students.</p>
                 </div>
                 <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
-                    <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#129504;</div>
-                    <h4 style="margin-bottom:0.5rem;">Real AI Insights</h4>
-                    <p style="font-size:0.85rem;color:var(--text-muted);">Qwen2.5-Coder 7B understands code deeply. Not just file counting - real architectural analysis.</p>
+                    <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#128257;</div>
+                    <h4 style="margin-bottom:0.5rem;">Additive Analysis</h4>
+                    <p style="font-size:0.85rem;color:var(--text-muted);">Discovers existing skills and memories, feeds them to the model. Builds on what you have instead of regenerating from scratch.</p>
                 </div>
                 <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
-                    <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#128268;</div>
-                    <h4 style="margin-bottom:0.5rem;">Pluggable</h4>
-                    <p style="font-size:0.85rem;color:var(--text-muted);">Enterprise users can swap in Claude or GPT APIs for higher quality. Local model is the default.</p>
+                    <div style="font-size:1.5rem;margin-bottom:0.5rem;">&#128640;</div>
+                    <h4 style="margin-bottom:0.5rem;">Self-Upgrade</h4>
+                    <p style="font-size:0.85rem;color:var(--text-muted);"><code>engram upgrade</code> checks PyPI and upgrades in place. One-liner install handles everything from zero.</p>
                 </div>
             </div>
 
             <div style="margin-top:2.5rem;">
                 <h3 style="text-align:center;margin-bottom:1.5rem;">What You Get</h3>
                 <div class="code-block">
-<pre><span class="func">$</span> engram analyze fastapi/fastapi
+<pre><span class="func">$</span> engram analyze .
 
 <span class="comment">╭────────────────────────────────────────╮</span>
-<span class="comment">│ Engram v2.1.4 - Local AI Code Analyzer │</span>
+<span class="comment">│ Engram v3.1.0 - Local AI Code Analyzer │</span>
 <span class="comment">╰────────────────────────────────────────╯</span>
 
 <span class="keyword">Phase 1:</span> Heuristic Analysis
-  Languages: Python (89%), Markdown (6%), Shell (3%)
-  Frameworks: FastAPI, Starlette, Pydantic, Uvicorn, pytest
-  Testing: pytest (142 test files)
-  CI/CD: GitHub Actions (5 workflows)
-  Patterns: REST API, Middleware, Documentation site
+  Languages: Python (58%), Go (8%), TypeScript (6%)
+  Frameworks: FastAPI, Pydantic, SQLAlchemy, pytest
+  Testing: detected (120 test files)
+  Patterns: REST API, Service layer, Documentation site
 
-<span class="keyword">Phase 2:</span> Local Model Inference (qwen2.5-coder:7b)
+<span class="keyword">Discovery:</span> Scanning for existing knowledge...
+  Found <span class="string">11 existing skills</span> and <span class="string">34 existing memories</span>
+  Will use <span class="string">additive</span> mode
+
+<span class="keyword">Phase 2:</span> Local Model Inference (<span class="string">Additive</span> mode)
   [1/5] Generating architecture skill...
   [2/5] Generating patterns skill...
   [3/5] Generating testing skill...
   [4/5] Generating project overview...
   [5/5] Generating activity analysis...
 
-<span class="string">╭───────── Results for fastapi/fastapi ──────────╮</span>
-<span class="string">│ Generated 3 skills + 2 memories               │</span>
-<span class="string">│ Model: qwen2.5-coder:7b | Time: 42s | Cost: $0│</span>
-<span class="string">╰────────────────────────────────────────────────╯</span></pre>
+<span class="string">╭───────────── Results ──────────────────╮</span>
+<span class="string">│ Generated 3 skills + 2 memories (ADDITIVE) │</span>
+<span class="string">│ Model: qwen2.5-coder:7b | Time: 47s | Cost: $0│</span>
+<span class="string">╰────────────────────────────────────────────╯</span></pre>
                 </div>
             </div>
         </div>
@@ -1704,10 +1721,16 @@ engram.<span class="func">track</span>({
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;">
                 <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;">
                     <h3 style="color:var(--accent);margin-bottom:1rem;">Option A: CLI (Recommended)</h3>
-                    <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">Analyze any repo from your terminal. No server needed.</p>
+                    <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">One command installs everything. Analyze any repo from your terminal.</p>
                     <div class="code-block" style="margin:0;">
-<pre><span class="func">pipx</span> install engram-cli
-<span class="func">engram</span> analyze .</pre>
+<pre><span class="comment"># Install everything in one shot</span>
+<span class="func">curl</span> -fsSL https://raw.githubusercontent.com/engram-hq/engram-cli/main/install.sh | bash
+
+<span class="comment"># Analyze a repo</span>
+<span class="func">engram</span> analyze .
+
+<span class="comment"># Upgrade anytime</span>
+<span class="func">engram</span> upgrade</pre>
                     </div>
                 </div>
                 <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;">
@@ -1724,8 +1747,8 @@ engram.<span class="func">track</span>({
 
     <section class="cta">
         <div class="container">
-            <h2>Analyze any codebase. Zero cost. Fully local.</h2>
-            <p>Engram is open source. The CLI runs entirely on your machine with a built-in AI model. No API keys, no cloud, no cost. Perfect for researchers, educators, and teams who care about privacy.</p>
+            <h2>Analyze any codebase. Build on what you know.</h2>
+            <p>Engram is open source. The CLI runs entirely on your machine with a built-in AI model and additive analysis. Your knowledge compounds over time. No API keys, no cloud, no cost.</p>
             <div class="hero-buttons">
                 <a href="#cli" class="btn-primary">Install CLI</a>
                 <a href="#try-locally" class="btn-secondary">Other Options</a>
